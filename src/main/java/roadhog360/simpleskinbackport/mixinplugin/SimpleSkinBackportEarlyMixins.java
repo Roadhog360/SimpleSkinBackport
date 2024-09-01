@@ -3,6 +3,7 @@ package roadhog360.simpleskinbackport.mixinplugin;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraft.server.management.PlayerProfileCache;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 
 import java.io.File;
@@ -24,7 +25,12 @@ public class SimpleSkinBackportEarlyMixins implements IFMLLoadingPlugin, IEarlyM
     @Override
     public List<String> getMixins(Set<String> loadedCoreMods) {
         List<String> mixins = new ArrayList<>();
-        mixins.add("MixinModelBiped");
+        mixins.add("MixinEntityPlayer");
+        if(side == MixinEnvironment.Side.CLIENT) {
+            mixins.add("MixinAbstractClientPlayer");
+            mixins.add("MixinRenderPlayer");
+            mixins.add("MixinImageBufferDownload");
+        }
         return mixins;
     }
 

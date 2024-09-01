@@ -1,42 +1,34 @@
-package roadhog360.simpleskinbackport.mixins.early;
+package roadhog360.simpleskinbackport.client;
 
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import roadhog360.simpleskinbackport.SimpleSkinBackport;
+import net.minecraft.entity.Entity;
 
-@Mixin(ModelBiped.class)
-public abstract class MixinModelBiped extends ModelBase {
+public class ModelPlayerNew extends ModelBiped {
 
-    @Shadow public ModelRenderer bipedHead;
-    @Shadow public ModelRenderer bipedHeadwear;
-    @Shadow public ModelRenderer bipedBody;
-    @Shadow public ModelRenderer bipedRightArm;
-    @Shadow public ModelRenderer bipedLeftArm;
-    @Shadow public ModelRenderer bipedRightLeg;
-    @Shadow public ModelRenderer bipedLeftLeg;
-    @Shadow public ModelRenderer bipedEars;
-    @Shadow public ModelRenderer bipedCloak;
+    /*
+     * This class, with permission, is provided by SkinPort, thanks to LainMI
+     * https://www.curseforge.com/minecraft/mc-mods/skinport
+     * Permission: https://www.curseforge.com/minecraft/mc-mods/skinport?comment=142
+     */
 
-    //new stuff
     public ModelRenderer bipedLeftArmwear;
     public ModelRenderer bipedRightArmwear;
     public ModelRenderer bipedLeftLegwear;
     public ModelRenderer bipedRightLegwear;
     public ModelRenderer bipedBodyWear;
-    public boolean smallArms = true;
+    public boolean smallArms;
 
-    @Inject(method = "<init>(FFII)V", at = @At("TAIL"))
-    private void injectNewLimbs(float z, float p_i1149_2_, int texWidth, int texHeight, CallbackInfo ci) {
+    public ModelPlayerNew(float z, boolean slim) {
+        super(z, 0.0F, 64, 64);
 
-        if (smallArms) { //thin arms, set to true for now
+        this.smallArms = slim;
+
+        bipedCloak = new ModelRenderer(this, 0, 0);
+        bipedCloak.setTextureSize(64, 32);
+        bipedCloak.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, z);
+
+        if (slim) {
             bipedLeftArm = new ModelRenderer(this, 32, 48);
             bipedLeftArm.addBox(-1.0F, -2.0F, -2.0F, 3, 12, 4, z);
             bipedLeftArm.setRotationPoint(5.0F, 2.5F, 0.0F);
@@ -81,5 +73,13 @@ public abstract class MixinModelBiped extends ModelBase {
         bipedBodyWear = new ModelRenderer(this, 16, 32);
         bipedBodyWear.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, z + 0.25F);
         bipedBody.addChild(bipedBodyWear);
+    }
+
+    @Override
+    public void render(Entity p_render_1_, float p_render_2_, float p_render_3_, float p_render_4_, float p_render_5_, float p_render_6_, float p_render_7_) {
+        super.render(p_render_1_, p_render_2_, p_render_3_, p_render_4_, p_render_5_, p_render_6_, p_render_7_);
+
+        if (smallArms)
+            bipedRightArm.rotationPointX += 1.0F;
     }
 }
