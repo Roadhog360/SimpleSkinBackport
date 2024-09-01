@@ -12,20 +12,21 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import roadhog360.simpleskinbackport.client.ModelPlayerNew;
+import roadhog360.simpleskinbackport.core.Utils;
 import roadhog360.simpleskinbackport.ducks.ISlimModelData;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 @Mixin(RenderPlayer.class)
 public abstract class MixinRenderPlayer extends RendererLivingEntity {
 
     @Shadow public ModelBiped modelBipedMain;
 
+    private static final ModelBiped simpleSkinBackport$WIDE = Utils.createPlayerModel(false);
     @Unique
-    private static final ModelPlayerNew simpleSkinBackport$WIDE = new ModelPlayerNew(0.0F, false);
-    @Unique
-    private static final ModelPlayerNew simpleSkinBackport$SLIM = new ModelPlayerNew(0.0F, true);
+    private static final ModelBiped simpleSkinBackport$SLIM = Utils.createPlayerModel(true);
 
     @Unique
     private static final ThreadLocal<Set<EntityPlayer>> simpleSkinBackport$SLIM_MODELS =
@@ -33,11 +34,6 @@ public abstract class MixinRenderPlayer extends RendererLivingEntity {
 
     public MixinRenderPlayer(ModelBase p_i1261_1_, float p_i1261_2_) {
         super(p_i1261_1_, p_i1261_2_);
-    }
-
-    @Inject(method = "<init>", at = @At(value = "TAIL"))
-    private void useNewRenderer(CallbackInfo ci) {
-        mainModel = modelBipedMain = simpleSkinBackport$WIDE;
     }
 
     @Inject(method = "renderFirstPersonArm", at = @At(value = "HEAD"))
