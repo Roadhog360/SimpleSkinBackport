@@ -4,4 +4,4 @@ plugins {
 }
 
 
-project.setVersion("HEY_MR_HOG")
+project.setVersion("0.0.0")
