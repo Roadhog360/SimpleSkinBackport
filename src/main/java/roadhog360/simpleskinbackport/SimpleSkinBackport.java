@@ -1,6 +1,5 @@
 package roadhog360.simpleskinbackport;
 
-import com.falsepattern.gasstation.Tags;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -10,8 +9,8 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = SSB.MODID, version = Tags.VERSION, name = "SimpleSkinBackport", acceptedMinecraftVersions = "[1.7.10]")
-public class SSB {
+@Mod(modid = SimpleSkinBackport.MODID, version = Tags.VERSION, name = "SimpleSkinBackport", acceptedMinecraftVersions = "[1.7.10]")
+public class SimpleSkinBackport {
     public static final String MODID = "ssb";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
