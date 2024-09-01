@@ -35,4 +35,5 @@
  */
 dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.5.4-GTNH:dev")
+    compileOnly deobfCurse("headcrumbs-222838:2279949")
 }

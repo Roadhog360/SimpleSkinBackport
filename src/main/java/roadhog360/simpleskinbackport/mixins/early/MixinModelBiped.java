@@ -54,7 +54,7 @@ public abstract class MixinModelBiped extends ModelBase {
             bipedCloak.setTextureSize(64, 32);
             bipedCloak.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, z);
 
-            if (Utils.getCurrentCreationState() != Utils.CreationState.SLIM_PLAYER) {
+            if (Utils.getCurrentCreationState() == Utils.CreationState.SLIM_PLAYER) {
                 bipedLeftArm = new ModelRenderer(this, 32, 48);
                 bipedLeftArm.addBox(-1.0F, -2.0F, -2.0F, 3, 12, 4, z);
                 bipedLeftArm.setRotationPoint(5.0F, 2.5F, 0.0F);
