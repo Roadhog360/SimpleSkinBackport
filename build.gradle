@@ -2,3 +2,6 @@
 plugins {
     id 'com.gtnewhorizons.gtnhconvention'
 }
+
+
+project.setVersion("HEY_MR_HOG")
