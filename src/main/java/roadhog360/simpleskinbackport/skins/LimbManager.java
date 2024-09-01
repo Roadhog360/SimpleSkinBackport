@@ -16,7 +16,7 @@ public class LimbManager {
     }
 
     public static boolean showLimb(byte data, Limb limbToShow) {
-        return ((data >> limbToShow.ordinal()) & 1) == 1;
+        return (data & limbToShow.ordinal()) != 0;
     }
 
     public enum Limb {
