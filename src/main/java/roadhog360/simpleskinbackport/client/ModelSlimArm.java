@@ -4,7 +4,15 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 
+ /**
+ * Was hoping to use this class to make the arm states toggleable instead of creating two separate objects.
+ * However specifically on the right arm, the boxSlim seems to inherit the exact values of boxWide regardless of what I make its args.
+ * Hopefully I can switch back to this when I find out why.
+ * Leaving this here so anyone who knows can crack the mystery.
+ */
+@Deprecated
 public class ModelSlimArm extends ModelHatLayer {
+
 
     private boolean hatLayer;
     private final boolean rightArm;

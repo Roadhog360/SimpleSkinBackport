@@ -1,9 +1,12 @@
 package roadhog360.simpleskinbackport;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.common.MinecraftForge;
+import roadhog360.simpleskinbackport.core.ClientEventHandler;
 
 public class CommonProxy {
 
@@ -13,7 +16,10 @@ public class CommonProxy {
     }
 
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes." (Remove if not needed)
-    public void init(FMLInitializationEvent event) {}
+    public void init(FMLInitializationEvent event) {
+        FMLCommonHandler.instance().bus().register(ClientEventHandler.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
+    }
 
     // postInit "Handle interaction with other mods, complete your setup based on this." (Remove if not needed)
     public void postInit(FMLPostInitializationEvent event) {}
