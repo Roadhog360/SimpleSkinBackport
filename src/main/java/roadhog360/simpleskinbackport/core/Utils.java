@@ -2,7 +2,6 @@ package roadhog360.simpleskinbackport.core;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.util.ResourceLocation;
 
 import java.nio.charset.StandardCharsets;
@@ -43,7 +42,7 @@ public class Utils {
     }
 
     public static boolean isDefaultSkinSlim(UUID uuid) {
-        return getIndexFromUUID(uuid) >= DEFAULT_SKINS.length / 2;
+        return getIndexFromUUID(uuid) < DEFAULT_SKINS.length / 2;
     }
 
     public static boolean getSlimFromBase64Data(String base64) {
@@ -51,22 +50,19 @@ public class Utils {
         return props.getAsJsonObject("textures").getAsJsonObject("SKIN").getAsJsonObject("metadata").get("model").getAsString().equals("slim");
     }
 
-    private static final ThreadLocal<CreationState> CREATION_STATE = ThreadLocal.withInitial(() -> CreationState.NONE);
-
-    public static ModelBiped createPlayerModel(boolean slim) {
-        CREATION_STATE.set(slim ? CreationState.SLIM_PLAYER : CreationState.WIDE_PLAYER);
-        ModelBiped model = new ModelBiped(0, 0, 64, 64);
-        CREATION_STATE.set(CreationState.NONE);
-        return model;
-    }
-
-    public static CreationState getCurrentCreationState() {
-        return CREATION_STATE.get();
-    }
-
-    public enum CreationState {
-        NONE,
-        SLIM_PLAYER,
-        WIDE_PLAYER
+    public static String getCallerClassName() {
+        StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
+        String callerClassName = null;
+        for (int i=1; i<stElements.length; i++) {
+            StackTraceElement ste = stElements[i];
+            if (!ste.getClassName().equals(Utils.class.getName())&& ste.getClassName().indexOf("java.lang.Thread")!=0) {
+                if (callerClassName==null) {
+                    callerClassName = ste.getClassName();
+                } else if (!callerClassName.equals(ste.getClassName())) {
+                    return ste.getClassName();
+                }
+            }
+        }
+        return null;
     }
 }

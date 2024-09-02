@@ -1,6 +1,5 @@
 package roadhog360.simpleskinbackport.mixins.early;
 
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -8,60 +7,25 @@ import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import roadhog360.simpleskinbackport.core.Utils;
-import roadhog360.simpleskinbackport.ducks.ISlimModelData;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
+import roadhog360.simpleskinbackport.client.ModelSlimArm;
+import roadhog360.simpleskinbackport.ducks.INewModelData;
 
 @Mixin(RenderPlayer.class)
 public abstract class MixinRenderPlayer extends RendererLivingEntity {
-
-    @Shadow public ModelBiped modelBipedMain;
-
-    private static final ModelBiped simpleSkinBackport$WIDE = Utils.createPlayerModel(false);
-    @Unique
-    private static final ModelBiped simpleSkinBackport$SLIM = Utils.createPlayerModel(true);
-
-    @Unique
-    private static final ThreadLocal<Set<EntityPlayer>> simpleSkinBackport$SLIM_MODELS =
-        ThreadLocal.withInitial(() -> Collections.newSetFromMap(new WeakHashMap<>()));
+    @Shadow
+    public ModelBiped modelBipedMain;
 
     public MixinRenderPlayer(ModelBase p_i1261_1_, float p_i1261_2_) {
         super(p_i1261_1_, p_i1261_2_);
     }
 
     @Inject(method = "renderFirstPersonArm", at = @At(value = "HEAD"))
-    private void checkIfShouldUpdateModelState(EntityPlayer p_82441_1_, CallbackInfo ci) {
-        simpleSkinBackport$updateModelState(p_82441_1_);
-    }
-
-    @Inject(method = "doRender(Lnet/minecraft/client/entity/AbstractClientPlayer;DDDFF)V", at = @At(value = "HEAD"))
-    private void checkIfShouldUpdateModelState(AbstractClientPlayer p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_, CallbackInfo ci) {
-        simpleSkinBackport$updateModelState(p_76986_1_);
-    }
-
-    @Unique
-    private void simpleSkinBackport$updateModelState(EntityPlayer player) {
-        boolean updateSkinState = false;
-        if(player instanceof ISlimModelData playerExtData && playerExtData.simpleSkinBackport$needsModelUpdate()) {
-            if(playerExtData.simpleSkinBackport$isSlim()) {
-                simpleSkinBackport$SLIM_MODELS.get().add(player);
-            } else {
-                simpleSkinBackport$SLIM_MODELS.get().remove(player);
-            }
-            playerExtData.simpleSkinBackport$setNeedsUpdate(false);
+    private void setFirstPersonArmState(EntityPlayer p_82441_1_, CallbackInfo ci) {
+        if(p_82441_1_ instanceof INewModelData player && modelBipedMain.bipedRightArm instanceof ModelSlimArm slimRightArm) {
+            slimRightArm.setSlim(player.simpleSkinBackport$isSlim());
         }
-        mainModel = modelBipedMain = simpleSkinBackport$isSlim(player) ? simpleSkinBackport$SLIM : simpleSkinBackport$WIDE;
-    }
-
-    @Unique
-    private boolean simpleSkinBackport$isSlim(EntityPlayer player) {
-        return simpleSkinBackport$SLIM_MODELS.get().contains(player);
     }
 }
