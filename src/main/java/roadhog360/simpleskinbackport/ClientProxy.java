@@ -1,11 +1,9 @@
 package roadhog360.simpleskinbackport;
 
-import com.mojang.authlib.minecraft.MinecraftSessionService;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureManager;
-
-import java.io.File;
+import net.minecraftforge.common.MinecraftForge;
+import roadhog360.simpleskinbackport.core.ClientEventHandler;
 
 public class ClientProxy extends CommonProxy {
 
@@ -15,10 +13,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
-
-//        TextureManager texManager = Minecraft.getMinecraft().renderEngine;
-//        File skinFolder = new File(Minecraft.getMinecraft().fileAssets, "skins");
-//        MinecraftSessionService sessionService = Minecraft.getMinecraft().func_152347_ac(); // getSessionService
-//        Minecraft.getMinecraft().field_152350_aA/*skinManager*/ = new NewSkinManager(Minecraft.getMinecraft().func_152342_ad()/*getSkinManager*/, texManager, skinFolder, sessionService);
+        FMLCommonHandler.instance().bus().register(ClientEventHandler.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
     }
 }
