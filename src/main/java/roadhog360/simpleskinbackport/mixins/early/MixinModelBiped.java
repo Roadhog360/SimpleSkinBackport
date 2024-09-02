@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import roadhog360.simpleskinbackport.client.ModelHatLayer;
+import roadhog360.simpleskinbackport.client.ModelSlimArm;
 import roadhog360.simpleskinbackport.core.Utils;
 import roadhog360.simpleskinbackport.ducks.ISwitchableArmsModel;
 
@@ -31,25 +32,10 @@ public abstract class MixinModelBiped extends ModelBase implements ISwitchableAr
     @Shadow public ModelRenderer bipedEars;
     @Shadow public ModelRenderer bipedCloak;
 
-    //new stuff
     @Unique
-    public ModelRenderer simpleSkinBackport$bipedLeftArmWide;
+    public ModelSlimArm simpleSkinBackport$bipedLeftArmwear;
     @Unique
-    public ModelRenderer simpleSkinBackport$bipedRightArmWide;
-    @Unique
-    public ModelHatLayer simpleSkinBackport$bipedLeftArmwearWide;
-    @Unique
-    public ModelHatLayer simpleSkinBackport$bipedRightArmwearWide;
-
-    @Unique
-    public ModelRenderer simpleSkinBackport$bipedLeftArmSlim;
-    @Unique
-    public ModelRenderer simpleSkinBackport$bipedRightArmSlim;
-    @Unique
-    public ModelHatLayer simpleSkinBackport$bipedLeftArmwearSlim;
-    @Unique
-    public ModelHatLayer simpleSkinBackport$bipedRightArmwearSlim;
-
+    public ModelSlimArm simpleSkinBackport$bipedRightArmwear;
     @Unique
     public ModelHatLayer simpleSkinBackport$bipedLeftLegwear;
     @Unique
@@ -97,37 +83,21 @@ public abstract class MixinModelBiped extends ModelBase implements ISwitchableAr
             bipedCloak.setTextureSize(64, 32);
             bipedCloak.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, size);
 
-            simpleSkinBackport$bipedLeftArmWide = new ModelRenderer(this, 32, 48);
-            simpleSkinBackport$bipedLeftArmWide.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, size);
-            simpleSkinBackport$bipedLeftArmWide.setRotationPoint(5.0F, 2F, 0.0F);
+            bipedLeftArm = new ModelSlimArm(this, 32, 48, false);
+            bipedLeftArm.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, size);
+            bipedLeftArm.setRotationPoint(5.0F, 2F, 0.0F);
 
-            simpleSkinBackport$bipedRightArmWide = new ModelRenderer(this, 40, 16);
-            simpleSkinBackport$bipedRightArmWide.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, size);
-            simpleSkinBackport$bipedRightArmWide.setRotationPoint(-5.0F, 2F, 0.0F);
+            bipedRightArm = new ModelSlimArm(this, 40, 16, true);
+            bipedRightArm.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, size);
+            bipedRightArm.setRotationPoint(-5.0F, 2F, 0.0F);
 
-            simpleSkinBackport$bipedLeftArmwearWide = new ModelHatLayer(this, 48, 48);
-            simpleSkinBackport$bipedLeftArmwearWide.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, size + 0.25F);
-            simpleSkinBackport$bipedLeftArmWide.addChild(simpleSkinBackport$bipedLeftArmwearWide);
+            simpleSkinBackport$bipedLeftArmwear = new ModelSlimArm(this, 48, 48, false).setAsHatLayer();
+            simpleSkinBackport$bipedLeftArmwear.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, size + 0.25F);
+            bipedLeftArm.addChild(simpleSkinBackport$bipedLeftArmwear);
 
-            simpleSkinBackport$bipedRightArmwearWide = new ModelHatLayer(this, 40, 32);
-            simpleSkinBackport$bipedRightArmwearWide.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, size + 0.25F);
-            simpleSkinBackport$bipedRightArmWide.addChild(simpleSkinBackport$bipedRightArmwearWide);
-
-            simpleSkinBackport$bipedLeftArmSlim = new ModelRenderer(this, 32, 48);
-            simpleSkinBackport$bipedLeftArmSlim.addBox(-1.0F, -2.0F, -2.0F, 3, 12, 4, size);
-            simpleSkinBackport$bipedLeftArmSlim.setRotationPoint(5.0F, 2.5F, 0.0F);
-
-            simpleSkinBackport$bipedRightArmSlim = new ModelRenderer(this, 40, 16);
-            simpleSkinBackport$bipedRightArmSlim.addBox(-2.0F, -2.0F, -2.0F, 3, 12, 4, size);
-            simpleSkinBackport$bipedRightArmSlim.setRotationPoint(-4.0F, 2.5F, 0.0F);
-
-            simpleSkinBackport$bipedLeftArmwearSlim = new ModelHatLayer(this, 48, 48);
-            simpleSkinBackport$bipedLeftArmwearSlim.addBox(-1.0F, -2.5F, -2.0F, 3, 12, 4, size + 0.25F);
-            simpleSkinBackport$bipedLeftArmSlim.addChild(simpleSkinBackport$bipedLeftArmwearSlim);
-
-            simpleSkinBackport$bipedRightArmwearSlim = new ModelHatLayer(this, 40, 32);
-            simpleSkinBackport$bipedRightArmwearSlim.addBox(-2.0F, -2.5F, -2.0F, 3, 12, 4, size + 0.25F);
-            simpleSkinBackport$bipedRightArmSlim.addChild(simpleSkinBackport$bipedRightArmwearSlim);
+            simpleSkinBackport$bipedRightArmwear = new ModelSlimArm(this, 40, 32, true).setAsHatLayer();
+            simpleSkinBackport$bipedRightArmwear.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, size + 0.25F);
+            bipedRightArm.addChild(simpleSkinBackport$bipedRightArmwear);
 
             bipedLeftLeg = new ModelRenderer(this, 16, 48);
             bipedLeftLeg.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, size);
@@ -152,12 +122,11 @@ public abstract class MixinModelBiped extends ModelBase implements ISwitchableAr
     @Override
     public void setArmState(boolean slim) {
         if(simpleSkinBackport$isPlayerModel) {
-            if (slim) {
-                bipedLeftArm = simpleSkinBackport$bipedLeftArmSlim;
-                bipedRightArm = simpleSkinBackport$bipedRightArmSlim;
-            } else {
-                bipedLeftArm = simpleSkinBackport$bipedLeftArmWide;
-                bipedRightArm = simpleSkinBackport$bipedRightArmWide;
+            if(bipedLeftArm instanceof ModelSlimArm bipedLeftArmSlim) {
+                bipedLeftArmSlim.setSlim(slim);
+            }
+            if(bipedRightArm instanceof ModelSlimArm bipedRightArmSlim) {
+                bipedRightArmSlim.setSlim(slim);
             }
         }
     }
