@@ -1,8 +1,6 @@
 package roadhog360.simpleskinbackport.mixins.early;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import com.mojang.authlib.properties.Property;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,9 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import roadhog360.simpleskinbackport.core.Utils;
 import roadhog360.simpleskinbackport.ducks.INewModelData;
 
@@ -21,18 +17,6 @@ public abstract class MixinAbstractClientPlayer extends EntityPlayer implements 
 
     public MixinAbstractClientPlayer(World p_i45324_1_, GameProfile p_i45324_2_) {
         super(p_i45324_1_, p_i45324_2_);
-    }
-
-    @Inject(method = "func_152121_a", at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;locationSkin:Lnet/minecraft/util/ResourceLocation;"))
-    private void setSkinState(MinecraftProfileTexture.Type skinPart, ResourceLocation skinLoc, CallbackInfo ci) {
-        if(getGameProfile().getProperties().containsKey("textures")) {
-            for(Property property : getGameProfile().getProperties().get("textures")) {
-                if(property.getName().equals("textures")) {
-                    simpleSkinBackport$setSlim(Utils.getSlimFromBase64Data(property.getValue()));
-                    break;
-                }
-            }
-        }
     }
 
     @Redirect(method = "getLocationSkin()Lnet/minecraft/util/ResourceLocation;",
