@@ -30,6 +30,8 @@ public class Utils {
         new ResourceLocation("textures/entity/player/wide/sunny.png"),
         new ResourceLocation("textures/entity/player/wide/zuri.png")};
 
+    public static final ResourceLocation NEW_STEVE = DEFAULT_SKINS[15];
+
     public static int getIndexFromUUID(UUID uuid) {
         if(uuid == null) { //TODO Config to not use new skins perhaps?
             return 15;
@@ -37,8 +39,12 @@ public class Utils {
         return Math.floorMod(uuid.hashCode(), DEFAULT_SKINS.length);
     }
 
+    public static ResourceLocation getDefaultSkin(int index) {
+        return DEFAULT_SKINS[index % DEFAULT_SKINS.length];
+    }
+
     public static ResourceLocation getDefaultSkin(UUID uuid) {
-        return DEFAULT_SKINS[getIndexFromUUID(uuid)];
+        return getDefaultSkin(getIndexFromUUID(uuid));
     }
 
     public static boolean isDefaultSkinSlim(UUID uuid) {
@@ -64,5 +70,11 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    private static final ThreadLocal<Boolean> isDownloadingPlayerSkin = ThreadLocal.withInitial(() -> false);
+
+    public static boolean getIsDownloadingPlayerSkin() {
+        return isDownloadingPlayerSkin.get();
     }
 }

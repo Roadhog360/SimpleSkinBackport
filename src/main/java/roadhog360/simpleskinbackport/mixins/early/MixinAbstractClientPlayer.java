@@ -1,8 +1,7 @@
 package roadhog360.simpleskinbackport.mixins.early;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.properties.Property;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.resources.SkinManager;
@@ -11,17 +10,29 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import roadhog360.simpleskinbackport.core.Utils;
 import roadhog360.simpleskinbackport.ducks.INewModelData;
 
 @Mixin(AbstractClientPlayer.class)
 public abstract class MixinAbstractClientPlayer extends EntityPlayer implements SkinManager.SkinAvailableCallback, INewModelData {
 
-    boolean checkedBase64Data;
-
     public MixinAbstractClientPlayer(World p_i45324_1_, GameProfile p_i45324_2_) {
         super(p_i45324_1_, p_i45324_2_);
+    }
+
+    @Inject(method = "func_152121_a", at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;locationSkin:Lnet/minecraft/util/ResourceLocation;"))
+    private void setSkinState(MinecraftProfileTexture.Type skinPart, ResourceLocation skinLoc, CallbackInfo ci) {
+        if(getGameProfile().getProperties().containsKey("textures")) {
+            for(Property property : getGameProfile().getProperties().get("textures")) {
+                if(property.getName().equals("textures")) {
+                    simpleSkinBackport$setSlim(Utils.getSlimFromBase64Data(property.getValue()));
+                    break;
+                }
+            }
+        }
     }
 
     @Redirect(method = "getLocationSkin()Lnet/minecraft/util/ResourceLocation;",
@@ -29,21 +40,6 @@ public abstract class MixinAbstractClientPlayer extends EntityPlayer implements 
     private ResourceLocation setNewDefaultSkinBehavior() {
         simpleSkinBackport$setSlim(Utils.isDefaultSkinSlim(getUniqueID()));
         return Utils.getDefaultSkin(getUniqueID());
-    }
-
-    @WrapOperation(method = "getLocationSkin()Lnet/minecraft/util/ResourceLocation;",
-        at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;locationSkin:Lnet/minecraft/util/ResourceLocation;", ordinal = 1))
-    private ResourceLocation setNewSkinModel(AbstractClientPlayer instance, Operation<ResourceLocation> original) {
-        if(!checkedBase64Data && instance.getGameProfile().getProperties().containsKey("textures")) {
-            for(Property property : instance.getGameProfile().getProperties().get("textures")) {
-                if(property.getName().equals("textures")) {
-                    simpleSkinBackport$setSlim(Utils.getSlimFromBase64Data(property.getValue()));
-                    checkedBase64Data = true;
-                    break;
-                }
-            }
-        }
-        return original.call(instance);
     }
 
 //    UUID uuid = UUID.randomUUID();

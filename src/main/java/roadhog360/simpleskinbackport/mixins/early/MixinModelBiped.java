@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import roadhog360.simpleskinbackport.client.ModelHatLayer;
+import roadhog360.simpleskinbackport.client.models.ModelHatLayer;
 import roadhog360.simpleskinbackport.core.Utils;
 import roadhog360.simpleskinbackport.ducks.ISwitchableArmsModel;
 
