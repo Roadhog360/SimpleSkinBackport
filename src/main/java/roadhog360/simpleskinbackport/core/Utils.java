@@ -1,11 +1,15 @@
 package roadhog360.simpleskinbackport.core;
 
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import net.minecraft.util.ResourceLocation;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Map;
 import java.util.UUID;
 
 public class Utils {
@@ -56,6 +60,23 @@ public class Utils {
         return props.getAsJsonObject("textures").getAsJsonObject("SKIN").getAsJsonObject("metadata").get("model").getAsString().equals("slim");
     }
 
+    /**
+     * null == could not get slim state from game profile
+     * Unused but might be needed in the future
+     * @param profile
+     * @return
+     */
+    public static Boolean getSlimFromGameProfile(GameProfile profile) {
+        if(profile.getProperties().containsKey("textures")) {
+            for(Property property : profile.getProperties().get("textures")) {
+                if(property.getName().equals("textures")) {
+                    return Utils.getSlimFromBase64Data(property.getValue());
+                }
+            }
+        }
+        return null;
+    }
+
     public static String getCallerClassName() {
         StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
         String callerClassName = null;
@@ -72,9 +93,8 @@ public class Utils {
         return null;
     }
 
-    private static final ThreadLocal<Boolean> isDownloadingPlayerSkin = ThreadLocal.withInitial(() -> false);
-
-    public static boolean getIsDownloadingPlayerSkin() {
-        return isDownloadingPlayerSkin.get();
-    }
+    /**
+     * null == not cached
+     */
+    public static final Map<String, Boolean> HASH_CACHE = Maps.newHashMap();
 }

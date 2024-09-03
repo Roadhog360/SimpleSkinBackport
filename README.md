@@ -14,10 +14,10 @@ Current Features:
   - Extended hat layer support
 - Translucent hat layer support
 - Fix overlap in hat layer when wearing a head
+- Hat layers on head blocks
 - New default skins alongside just Steve
 
 Todo:
-- Hat layers on head blocks
 - Config
   - Toggle head block inventory icon render
   - Toggle new default skins (Either Steve/Alex or JUST Steve)
