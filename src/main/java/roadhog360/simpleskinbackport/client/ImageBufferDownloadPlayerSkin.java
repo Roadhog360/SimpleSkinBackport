@@ -1,12 +1,26 @@
 package roadhog360.simpleskinbackport.client;
 
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import net.minecraft.client.renderer.ImageBufferDownload;
+import net.minecraft.client.resources.SkinManager;
+import roadhog360.simpleskinbackport.core.Utils;
+import roadhog360.simpleskinbackport.ducks.INewModelData;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 public class ImageBufferDownloadPlayerSkin extends ImageBufferDownload {
+
+    private final MinecraftProfileTexture texture;
+    private final SkinManager.SkinAvailableCallback callback;
+
+    public ImageBufferDownloadPlayerSkin(MinecraftProfileTexture texture, SkinManager.SkinAvailableCallback callback) {
+        super();
+        this.texture = texture;
+        this.callback = callback;
+    }
+
     @Override
     public BufferedImage parseUserSkin(BufferedImage buffImg) {
         if (buffImg == null)
@@ -44,5 +58,14 @@ public class ImageBufferDownloadPlayerSkin extends ImageBufferDownload {
         setAreaOpaque(16, 48, 48, 64);
         setAreaTransparent(48, 48, 64, 64);
         return buffImg2;
+    }
+
+    //This is temporary; Once I figure out how to inject where this is called in SkinManager.class I'll do that instead.
+    @Override
+    public void func_152634_a() {
+        super.func_152634_a();
+        if(callback instanceof INewModelData data) {
+            Utils.setSlimFromMetadata(texture, data);
+        }
     }
 }

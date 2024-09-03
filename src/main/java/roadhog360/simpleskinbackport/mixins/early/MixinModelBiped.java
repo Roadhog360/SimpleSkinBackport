@@ -148,7 +148,7 @@ public abstract class MixinModelBiped extends ModelBase implements ISwitchableAr
     }
 
     @Override
-    public void setArmState(boolean slim) {
+    public void simpleSkinBackport$setSlim(boolean slim) {
         if(simpleSkinBackport$isPlayerModel) {
             if (slim) {
                 bipedLeftArm = simpleSkinBackport$bipedLeftArmSlim;

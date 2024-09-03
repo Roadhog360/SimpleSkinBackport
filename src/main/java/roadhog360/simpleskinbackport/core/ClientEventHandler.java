@@ -34,7 +34,7 @@ public class ClientEventHandler {
     private void checkAndSetArmsState(Entity entity, Render render) {
         if(render instanceof RenderPlayer renderPlayer && renderPlayer.modelBipedMain instanceof ISwitchableArmsModel model
             && entity instanceof INewModelData player) {
-            model.setArmState(player.simpleSkinBackport$isSlim());
+            model.simpleSkinBackport$setSlim(player.simpleSkinBackport$isSlim());
         }
     }
 

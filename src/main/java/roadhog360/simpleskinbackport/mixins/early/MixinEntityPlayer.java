@@ -9,7 +9,7 @@ import roadhog360.simpleskinbackport.ducks.INewModelData;
 public class MixinEntityPlayer implements INewModelData {
 
     @Unique
-    private boolean simpleSkinBackport$slim;
+    private boolean simpleSkinBackport$slim = false;
 
     @Override
     public boolean simpleSkinBackport$isSlim() {

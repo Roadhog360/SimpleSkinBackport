@@ -4,12 +4,17 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.properties.Property;
+import net.minecraft.client.resources.SkinManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import roadhog360.simpleskinbackport.ducks.INewModelData;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Utils {
@@ -76,6 +81,14 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    public static void setSlimFromMetadata(MinecraftProfileTexture texture, INewModelData data) {
+        data.simpleSkinBackport$setSlim(Objects.equals(texture.getMetadata("model"), "slim"));
+    }
+
+    public static boolean isPlayer(MinecraftProfileTexture.Type type, SkinManager.SkinAvailableCallback callback) {
+        return type == MinecraftProfileTexture.Type.SKIN && callback instanceof EntityPlayer;
     }
 
     public static String getCallerClassName() {
