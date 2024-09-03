@@ -57,7 +57,8 @@ public class Utils {
 
     public static boolean getSlimFromBase64Data(String base64) {
         JsonObject props = new Gson().fromJson(new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8), JsonObject.class);
-        return props.getAsJsonObject("textures").getAsJsonObject("SKIN").getAsJsonObject("metadata").get("model").getAsString().equals("slim");
+        JsonObject medatata = props.getAsJsonObject("textures").getAsJsonObject("SKIN").getAsJsonObject("metadata");
+        return medatata != null && medatata.get("model").getAsString().equals("slim");
     }
 
     /**

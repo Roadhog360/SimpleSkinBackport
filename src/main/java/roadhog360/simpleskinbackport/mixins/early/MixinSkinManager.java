@@ -6,8 +6,10 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import net.minecraft.client.renderer.ImageBufferDownload;
 import net.minecraft.client.resources.SkinManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -24,7 +26,7 @@ public class MixinSkinManager {
                                                     @Local(argsOnly = true) final MinecraftProfileTexture.Type p_152789_2_,
                                                     @Local(argsOnly = true) final SkinManager.SkinAvailableCallback p_152789_3_
                                                     ) {
-        if(p_152789_2_ == MinecraftProfileTexture.Type.SKIN) {
+        if(simpleSkinBackport$isNewPlayerWithPlayerData(p_152789_2_, p_152789_3_)) {
             return new ResourceLocation(SimpleSkinBackport.MODID, p_i1293_1_);
         }
         return original.call(p_i1293_1_);
@@ -34,7 +36,7 @@ public class MixinSkinManager {
     private ImageBufferDownload changeDownloadBufferManager(Operation<ImageBufferDownload> original,
                                                             @Local(argsOnly = true) final MinecraftProfileTexture.Type p_152789_2_,
                                                             @Local(argsOnly = true) SkinManager.SkinAvailableCallback p_152789_3_) {
-        if(p_152789_2_ == MinecraftProfileTexture.Type.SKIN) {
+        if(simpleSkinBackport$isNewPlayerWithPlayerData(p_152789_2_, p_152789_3_)) {
             return new ImageBufferDownloadPlayerSkin();
         }
         return original.call();
@@ -44,10 +46,15 @@ public class MixinSkinManager {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/SkinManager$SkinAvailableCallback;func_152121_a(Lcom/mojang/authlib/minecraft/MinecraftProfileTexture$Type;Lnet/minecraft/util/ResourceLocation;)V",
         shift = At.Shift.AFTER))
     private void injectCallbackSkinCheck(MinecraftProfileTexture p_152789_1_, MinecraftProfileTexture.Type p_152789_2_, SkinManager.SkinAvailableCallback p_152789_3_, CallbackInfoReturnable<ResourceLocation> cir) {
-        if(p_152789_2_ == MinecraftProfileTexture.Type.SKIN && p_152789_3_ instanceof INewModelData playerData) {
+        if(simpleSkinBackport$isNewPlayerWithPlayerData(p_152789_2_, p_152789_3_) && p_152789_3_ instanceof INewModelData playerData) {
             if(Objects.equals(p_152789_1_.getMetadata("model"), "slim")) {
                 playerData.simpleSkinBackport$setSlim(true);
             }
         }
+    }
+
+    @Unique
+    private boolean simpleSkinBackport$isNewPlayerWithPlayerData(final MinecraftProfileTexture.Type type, SkinManager.SkinAvailableCallback callback) {
+        return type == MinecraftProfileTexture.Type.SKIN && callback instanceof EntityPlayer;
     }
 }
