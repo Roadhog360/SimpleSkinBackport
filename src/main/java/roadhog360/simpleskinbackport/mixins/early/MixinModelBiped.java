@@ -122,11 +122,11 @@ public abstract class MixinModelBiped extends ModelBase implements ISwitchableAr
             simpleSkinBackport$bipedRightArmSlim.setRotationPoint(-4.0F, 2.5F, 0.0F);
 
             simpleSkinBackport$bipedLeftArmwearSlim = new ModelHatLayer(this, 48, 48);
-            simpleSkinBackport$bipedLeftArmwearSlim.addBox(-1.0F, -2.5F, -2.0F, 3, 12, 4, size + 0.25F);
+            simpleSkinBackport$bipedLeftArmwearSlim.addBox(-1.0F, -2.0F, -2.0F, 3, 12, 4, size + 0.25F);
             simpleSkinBackport$bipedLeftArmSlim.addChild(simpleSkinBackport$bipedLeftArmwearSlim);
 
             simpleSkinBackport$bipedRightArmwearSlim = new ModelHatLayer(this, 40, 32);
-            simpleSkinBackport$bipedRightArmwearSlim.addBox(-2.0F, -2.5F, -2.0F, 3, 12, 4, size + 0.25F);
+            simpleSkinBackport$bipedRightArmwearSlim.addBox(-2.0F, -2.0F, -2.0F, 3, 12, 4, size + 0.25F);
             simpleSkinBackport$bipedRightArmSlim.addChild(simpleSkinBackport$bipedRightArmwearSlim);
 
             bipedLeftLeg = new ModelRenderer(this, 16, 48);
@@ -144,8 +144,6 @@ public abstract class MixinModelBiped extends ModelBase implements ISwitchableAr
             simpleSkinBackport$bipedBodyWear = new ModelHatLayer(this, 16, 32);
             simpleSkinBackport$bipedBodyWear.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, size + 0.25F);
             bipedBody.addChild(simpleSkinBackport$bipedBodyWear);
-
-            setArmState(false);
         }
     }
 
