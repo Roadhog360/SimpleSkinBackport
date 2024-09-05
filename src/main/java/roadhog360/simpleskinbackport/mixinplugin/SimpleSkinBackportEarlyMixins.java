@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class SimpleSkinBackportEarlyMixins implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
-    public static final MixinEnvironment.Side side = MixinEnvironment.getCurrentEnvironment().getSide();
+    public static final MixinEnvironment.Side SIDE = MixinEnvironment.getCurrentEnvironment().getSide();
 
     @Override
     public String getMixinConfig() {
@@ -22,7 +22,7 @@ public class SimpleSkinBackportEarlyMixins implements IFMLLoadingPlugin, IEarlyM
     public List<String> getMixins(Set<String> loadedCoreMods) {
         List<String> mixins = new ArrayList<>();
         mixins.add("MixinEntityPlayer");
-        if (side == MixinEnvironment.Side.CLIENT) {
+        if (SIDE == MixinEnvironment.Side.CLIENT) {
             mixins.add("MixinAbstractClientPlayer");
             mixins.add("MixinModelBiped");
             mixins.add("MixinModelSkull");
