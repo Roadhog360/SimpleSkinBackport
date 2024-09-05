@@ -25,3 +25,4 @@ Todo:
 Current incompatibility todo:
 - Twilight Forest giants
 - Smart Moving
+- Botania Gaia Guardian
