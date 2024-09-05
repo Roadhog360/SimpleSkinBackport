@@ -23,6 +23,7 @@ public class SimpleSkinBackportEarlyMixins implements IFMLLoadingPlugin, IEarlyM
         List<String> mixins = new ArrayList<>();
         mixins.add("MixinEntityPlayer");
         if (SIDE == MixinEnvironment.Side.CLIENT) {
+            mixins.add("MixinItemSkull");
             mixins.add("MixinAbstractClientPlayer");
             mixins.add("MixinModelBiped");
             mixins.add("MixinModelSkull");
