@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
@@ -27,14 +26,12 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onRenderEntity(RenderLivingEvent.Pre event) {
         checkAndSetArmsState(event.entity, event.renderer);
-        if(event.entity instanceof EntityLiving living) {
-            ItemStack itemstack = living.getEquipmentInSlot(4);
-            boolean showHeadwear = itemstack == null || !isHead(itemstack.getItem());
-            if(event.renderer instanceof RenderPlayer renderPlayer) {
-                renderPlayer.modelBipedMain.bipedHeadwear.showModel = showHeadwear;
-            } else if (event.renderer instanceof RenderBiped renderBiped) {
-                renderBiped.modelBipedMain.bipedHeadwear.showModel = showHeadwear;
-            }
+        ItemStack itemstack = event.entity.getEquipmentInSlot(4);
+        boolean showHeadwear = itemstack == null || !isHead(itemstack.getItem());
+        if(event.renderer instanceof RenderPlayer renderPlayer) {
+            renderPlayer.modelBipedMain.bipedHeadwear.showModel = showHeadwear;
+        } else if (event.renderer instanceof RenderBiped renderBiped) {
+            renderBiped.modelBipedMain.bipedHeadwear.showModel = showHeadwear;
         }
     }
 
