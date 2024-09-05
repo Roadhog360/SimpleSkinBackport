@@ -1,6 +1,6 @@
 package roadhog360.simpleskinbackport.ducks;
 
-public interface INewModelData {
+public interface IArmsState {
     boolean simpleSkinBackport$isSlim();
     void simpleSkinBackport$setSlim(boolean slim);
 }

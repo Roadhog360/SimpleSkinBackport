@@ -3,7 +3,7 @@ package roadhog360.simpleskinbackport;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.common.MinecraftForge;
-import roadhog360.simpleskinbackport.core.ClientEventHandler;
+import roadhog360.simpleskinbackport.client.ClientEventHandler;
 
 public class ClientProxy extends CommonProxy {
 

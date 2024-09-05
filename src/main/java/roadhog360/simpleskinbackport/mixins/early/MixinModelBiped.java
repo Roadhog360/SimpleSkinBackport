@@ -1,5 +1,7 @@
 package roadhog360.simpleskinbackport.mixins.early;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
@@ -11,14 +13,13 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import roadhog360.simpleskinbackport.client.models.ModelHatLayer;
+import roadhog360.simpleskinbackport.core.ArmPair;
 import roadhog360.simpleskinbackport.core.Utils;
-import roadhog360.simpleskinbackport.ducks.ISwitchableArmsModel;
+import roadhog360.simpleskinbackport.ducks.INewBipedModel;
 
 @Mixin(ModelBiped.class)
-public abstract class MixinModelBiped extends ModelBase implements ISwitchableArmsModel {
+public abstract class MixinModelBiped extends ModelBase implements INewBipedModel {
 
     @Shadow
     public ModelRenderer bipedHead;
@@ -33,130 +34,160 @@ public abstract class MixinModelBiped extends ModelBase implements ISwitchableAr
 
     //new stuff
     @Unique
-    public ModelRenderer simpleSkinBackport$bipedLeftArmWide;
+    public ModelRenderer simpleSkinBackport$bipedLeftArmwear;
     @Unique
-    public ModelRenderer simpleSkinBackport$bipedRightArmWide;
-    @Unique
-    public ModelHatLayer simpleSkinBackport$bipedLeftArmwearWide;
-    @Unique
-    public ModelHatLayer simpleSkinBackport$bipedRightArmwearWide;
+    public ModelRenderer simpleSkinBackport$bipedRightArmwear;
 
     @Unique
-    public ModelRenderer simpleSkinBackport$bipedLeftArmSlim;
+    public ModelRenderer simpleSkinBackport$bipedLeftLegwear;
     @Unique
-    public ModelRenderer simpleSkinBackport$bipedRightArmSlim;
+    public ModelRenderer simpleSkinBackport$bipedRightLegwear;
     @Unique
-    public ModelHatLayer simpleSkinBackport$bipedLeftArmwearSlim;
-    @Unique
-    public ModelHatLayer simpleSkinBackport$bipedRightArmwearSlim;
-
-    @Unique
-    public ModelHatLayer simpleSkinBackport$bipedLeftLegwear;
-    @Unique
-    public ModelHatLayer simpleSkinBackport$bipedRightLegwear;
-    @Unique
-    public ModelHatLayer simpleSkinBackport$bipedBodyWear;
+    public ModelRenderer simpleSkinBackport$bipedBodyWear;
 
     @Unique
     private boolean simpleSkinBackport$isPlayerModel;
 
-    @Redirect(method = "<init>(FFII)V", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target="Lnet/minecraft/client/model/ModelBiped;textureHeight:I"))
-    private void checkPlayerModelAndSetDim(ModelBiped instance, int value, @Local(ordinal = 0, argsOnly = true) float size) {
-        textureHeight = value; //Original assignment; We overwrote this earlier
 
-        boolean isPlayerRenderer;
-        //Do all this OUTSIDE of the if bracket, so we can find and add cases for classes that use size > 0
-        try {
-            Class<?> caller = Class.forName(Utils.getCallerClassName());
-            isPlayerRenderer = caller.isAssignableFrom(RenderPlayer.class) || caller.getName().equals("net.smart.render.ModelPlayer");
-            //We need a way to check if it's a player model, without modifying the RenderPlayer.
-            System.out.println();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    @WrapOperation(method = "<init>(FFII)V", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target="Lnet/minecraft/client/model/ModelBiped;textureHeight:I"))
+    private void checkPlayerModelAndSetDim(ModelBiped instance, int value, Operation<Void> original, @Local(ordinal = 0, argsOnly = true) float size) {
+        original.call(instance, simpleSkinBackport$isPlayerModel() ? 64 : value);
 
-        if(size == 0) {
-            //TODO: Might have to add special exceptions for big models, I think this is model size so I named it as such.
-            // Mods that add giant (or small) players will need special treatment.
-            if (isPlayerRenderer) {
-                textureHeight = 64;
-                simpleSkinBackport$isPlayerModel = true;
+        if(!simpleSkinBackport$isPlayerModel()) {
+            boolean isPlayerRenderer;
+            //Do all this OUTSIDE of the if bracket, so we can find and add cases for classes that use size > 0
+            try {
+                Class<?> caller = Class.forName(Utils.getCallerClassName());
+                isPlayerRenderer = caller.isAssignableFrom(RenderPlayer.class)
+                    || caller.getName().equals("net.smart.render.ModelPlayer") || caller.getName().contains("RenderTFGiant");
+                //We need a way to check if it's a player model, without modifying the RenderPlayer.
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (size == 0 || size == 0.0625F) {
+                //TODO: Might have to add special exceptions for big models, I think this is model size so I named it as such.
+                // Mods that add giant (or small) players will need special treatment.
+                if (isPlayerRenderer) {
+                    original.call(instance, 64);
+                    simpleSkinBackport$setPlayerModel(true);
+                }
             }
         }
     }
 
     @Inject(method = "<init>(FFII)V", at = @At("TAIL"))
     private void injectNewLimbs(float size, float p_i1149_2_, int texWidth, int texHeight, CallbackInfo ci) {
-        if (simpleSkinBackport$isPlayerModel) {
-            //TODO There are probably 64x32 slim skins, we should try to support them
-            //I think our parseUserSkin mixin might automatically convert them though? Gotta check...
-            //This "should" just work
-            //Also TODO Maybe make these inherit the values from the above boxes?
+        if (simpleSkinBackport$isPlayerModel()) {
+            Utils.remakeBoxes(bipedCloak.setTextureSize(64, 32));
 
-            bipedCloak = new ModelRenderer(this, 0, 0);
-            bipedCloak.setTextureSize(64, 32);
-            bipedCloak.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, size);
+            Utils.setAllBoxesTransparent(bipedHeadwear);
 
-            simpleSkinBackport$bipedLeftArmWide = new ModelRenderer(this, 32, 48);
-            simpleSkinBackport$bipedLeftArmWide.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, size);
-            simpleSkinBackport$bipedLeftArmWide.setRotationPoint(5.0F, 2F, 0.0F);
+            bipedLeftArm.mirror = false;
+            Utils.changeTextureOffset(bipedLeftArm, 32, 48);
+            //Right arm is fine as it is and doesn't need any transformation.
 
-            simpleSkinBackport$bipedRightArmWide = new ModelRenderer(this, 40, 16);
-            simpleSkinBackport$bipedRightArmWide.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, size);
-            simpleSkinBackport$bipedRightArmWide.setRotationPoint(-5.0F, 2F, 0.0F);
+            simpleSkinBackport$bipedLeftArmwear = Utils.cloneModel(this, bipedLeftArm, 48, 48,true, Utils.BoxTransformType.HAT);
+            simpleSkinBackport$bipedRightArmwear = Utils.cloneModel(this, bipedRightArm, 40, 32,true, Utils.BoxTransformType.HAT);
 
-            simpleSkinBackport$bipedLeftArmwearWide = new ModelHatLayer(this, 48, 48);
-            simpleSkinBackport$bipedLeftArmwearWide.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, size + 0.25F);
-            simpleSkinBackport$bipedLeftArmWide.addChild(simpleSkinBackport$bipedLeftArmwearWide);
+            bipedLeftLeg.mirror = false;
+            Utils.changeTextureOffset(bipedLeftLeg, 16, 48);
+            //Right leg is fine as it is and doesn't need any transformation.
 
-            simpleSkinBackport$bipedRightArmwearWide = new ModelHatLayer(this, 40, 32);
-            simpleSkinBackport$bipedRightArmwearWide.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, size + 0.25F);
-            simpleSkinBackport$bipedRightArmWide.addChild(simpleSkinBackport$bipedRightArmwearWide);
+            simpleSkinBackport$bipedLeftLegwear = Utils.cloneModel(this, bipedLeftLeg, 0, 48,true, Utils.BoxTransformType.HAT);
+            simpleSkinBackport$bipedRightLegwear = Utils.cloneModel(this, bipedRightLeg, 0, 32,true, Utils.BoxTransformType.HAT);
 
-            simpleSkinBackport$bipedLeftArmSlim = new ModelRenderer(this, 32, 48);
-            simpleSkinBackport$bipedLeftArmSlim.addBox(-1.0F, -2.0F, -2.0F, 3, 12, 4, size);
-            simpleSkinBackport$bipedLeftArmSlim.setRotationPoint(5.0F, 2.5F, 0.0F);
+            simpleSkinBackport$bipedBodyWear = Utils.cloneModel(this, bipedBody, 16, 32,true, Utils.BoxTransformType.HAT);
 
-            simpleSkinBackport$bipedRightArmSlim = new ModelRenderer(this, 40, 16);
-            simpleSkinBackport$bipedRightArmSlim.addBox(-2.0F, -2.0F, -2.0F, 3, 12, 4, size);
-            simpleSkinBackport$bipedRightArmSlim.setRotationPoint(-4.0F, 2.5F, 0.0F);
-
-            simpleSkinBackport$bipedLeftArmwearSlim = new ModelHatLayer(this, 48, 48);
-            simpleSkinBackport$bipedLeftArmwearSlim.addBox(-1.0F, -2.0F, -2.0F, 3, 12, 4, size + 0.25F);
-            simpleSkinBackport$bipedLeftArmSlim.addChild(simpleSkinBackport$bipedLeftArmwearSlim);
-
-            simpleSkinBackport$bipedRightArmwearSlim = new ModelHatLayer(this, 40, 32);
-            simpleSkinBackport$bipedRightArmwearSlim.addBox(-2.0F, -2.0F, -2.0F, 3, 12, 4, size + 0.25F);
-            simpleSkinBackport$bipedRightArmSlim.addChild(simpleSkinBackport$bipedRightArmwearSlim);
-
-            bipedLeftLeg = new ModelRenderer(this, 16, 48);
-            bipedLeftLeg.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, size);
-            bipedLeftLeg.setRotationPoint(1.9F, 12.0F, 0.0F);
-
-            simpleSkinBackport$bipedLeftLegwear = new ModelHatLayer(this, 0, 48);
-            simpleSkinBackport$bipedLeftLegwear.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, size + 0.25F);
-            bipedLeftLeg.addChild(simpleSkinBackport$bipedLeftLegwear);
-
-            simpleSkinBackport$bipedRightLegwear = new ModelHatLayer(this, 0, 32);
-            simpleSkinBackport$bipedRightLegwear.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, size + 0.25F);
-            bipedRightLeg.addChild(simpleSkinBackport$bipedRightLegwear);
-
-            simpleSkinBackport$bipedBodyWear = new ModelHatLayer(this, 16, 32);
-            simpleSkinBackport$bipedBodyWear.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, size + 0.25F);
-            bipedBody.addChild(simpleSkinBackport$bipedBodyWear);
+            simpleSkinBackport$createBoxes();
         }
+    }
+
+    @Unique
+    private ArmPair simpleSkinBackport$wideArms;
+    @Unique
+    private ArmPair simpleSkinBackport$slimArms;
+
+    @Unique
+    private ArmPair simpleSkinBackport$wideArmwear;
+    @Unique
+    private ArmPair simpleSkinBackport$slimArmwear;
+
+    /**
+     * Creates the ModelBox instances used for slim arms. Creates dummy models currently, this could probably be more efficient...
+     */
+    @Unique
+    private void simpleSkinBackport$createBoxes() {
+        //Experimental code where I re-make everything and initialize the boxes when the slim/wide arm request is made
+        //Because that can only mean this is a player model. Had a few issues with it though...
+        //1 is for some reason the head's hat layer would always be merged with the head itself. Might be precision lost on reconstructing the ModelBoxes
+        //Secondly was it didn't fix the right arm issue with Smart Moving like I wanted it to...
+//        Utils.changeTextureSize(this, 64, 64);
+//
+//        Utils.remakeBoxes(bipedCloak.setTextureSize(64, 32));
+//
+//        Utils.setAllBoxesTransparent(bipedHeadwear);
+//
+//        bipedLeftArm.mirror = false;
+//        Utils.changeTextureOffset(bipedLeftArm, 32, 48);
+//        //Right arm is fine as it is and doesn't need any transformation.
+//        Utils.remakeBoxes(bipedRightArm);
+//
+//        simpleSkinBackport$bipedLeftArmwear = Utils.cloneModel(this, bipedLeftArm, 48, 48,true, Utils.BoxTransformType.HAT);
+//        simpleSkinBackport$bipedRightArmwear = Utils.cloneModel(this, bipedRightArm, 40, 32,true, Utils.BoxTransformType.HAT);
+//
+//        bipedLeftLeg.mirror = false;
+//        Utils.changeTextureOffset(bipedLeftLeg, 16, 48);
+//        //Right leg is fine as it is and doesn't need any transformation.
+//        Utils.remakeBoxes(bipedRightLeg);
+//
+//        simpleSkinBackport$bipedLeftLegwear = Utils.cloneModel(this, bipedLeftLeg, 0, 48,true, Utils.BoxTransformType.HAT);
+//        simpleSkinBackport$bipedRightLegwear = Utils.cloneModel(this, bipedRightLeg, 0, 32,true, Utils.BoxTransformType.HAT);
+//
+//        simpleSkinBackport$bipedBodyWear = Utils.cloneModel(this, bipedBody, 16, 32,true, Utils.BoxTransformType.HAT);
+
+        ModelRenderer tempLeftArmSlim = Utils.cloneModel(this, bipedLeftArm, false, Utils.BoxTransformType.SLIM_ARM);
+        ModelRenderer tempRightArmSlim = Utils.cloneModel(this, bipedRightArm, false, Utils.BoxTransformType.SLIM_RIGHT_ARM);
+        ModelRenderer tempLeftArmwearSlim = Utils.setAllBoxesTransparent(Utils.cloneModel(
+            this, bipedLeftArm, 48, 48, false, Utils.BoxTransformType.SLIM_ARM_HAT));
+        ModelRenderer tempRightArmwearSlim = Utils.setAllBoxesTransparent(Utils.cloneModel(
+            this, bipedRightArm, 40, 32, false, Utils.BoxTransformType.SLIM_RIGHT_ARM_HAT));
+
+        simpleSkinBackport$wideArms = ArmPair.of(bipedLeftArm, bipedRightArm);
+        simpleSkinBackport$slimArms = ArmPair.of(tempLeftArmSlim, tempRightArmSlim);
+
+        simpleSkinBackport$wideArmwear = ArmPair.of(simpleSkinBackport$bipedLeftArmwear, simpleSkinBackport$bipedRightArmwear);
+        simpleSkinBackport$slimArmwear = ArmPair.of(tempLeftArmwearSlim, tempRightArmwearSlim);
     }
 
     @Override
     public void simpleSkinBackport$setSlim(boolean slim) {
+//        if(!simpleSkinBackport$isPlayerModel) {
+//            simpleSkinBackport$createBoxes();
+//            simpleSkinBackport$isPlayerModel = true;
+//        }
+
         if(simpleSkinBackport$isPlayerModel) {
-            if (slim) {
-                bipedLeftArm = simpleSkinBackport$bipedLeftArmSlim;
-                bipedRightArm = simpleSkinBackport$bipedRightArmSlim;
-            } else {
-                bipedLeftArm = simpleSkinBackport$bipedLeftArmWide;
-                bipedRightArm = simpleSkinBackport$bipedRightArmWide;
-            }
+            ArmPair arms = slim ? simpleSkinBackport$slimArms : simpleSkinBackport$wideArms;
+            ArmPair armwear = slim ? simpleSkinBackport$slimArmwear : simpleSkinBackport$wideArmwear;
+            bipedLeftArm.displayList = arms.getLeftDisplayList();
+            bipedRightArm.displayList = arms.getRightDisplayList();
+            simpleSkinBackport$bipedLeftArmwear.displayList = armwear.getLeftDisplayList();
+            simpleSkinBackport$bipedRightArmwear.displayList = armwear.getRightDisplayList();
+            bipedLeftArm.cubeList = arms.getLeft();
+            bipedRightArm.cubeList = arms.getRight();
+            simpleSkinBackport$bipedLeftArmwear.cubeList = armwear.getLeft();
+            simpleSkinBackport$bipedRightArmwear.cubeList = armwear.getRight();
         }
+    }
+
+    @Override
+    public boolean simpleSkinBackport$isPlayerModel() {
+        return simpleSkinBackport$isPlayerModel;
+    }
+
+    @Override
+    public void simpleSkinBackport$setPlayerModel(boolean player) {
+        simpleSkinBackport$isPlayerModel = player;
     }
 }

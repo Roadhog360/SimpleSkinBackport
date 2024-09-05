@@ -4,7 +4,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import net.minecraft.client.renderer.ImageBufferDownload;
 import net.minecraft.client.resources.SkinManager;
 import roadhog360.simpleskinbackport.core.Utils;
-import roadhog360.simpleskinbackport.ducks.INewModelData;
+import roadhog360.simpleskinbackport.ducks.IArmsState;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -64,7 +64,7 @@ public class ImageBufferDownloadPlayerSkin extends ImageBufferDownload {
     @Override
     public void func_152634_a() {
         super.func_152634_a();
-        if(callback instanceof INewModelData data) {
+        if(callback instanceof IArmsState data) {
             Utils.setSlimFromMetadata(texture, data);
         }
     }

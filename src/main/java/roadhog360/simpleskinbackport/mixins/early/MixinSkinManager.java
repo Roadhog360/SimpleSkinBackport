@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import roadhog360.simpleskinbackport.SimpleSkinBackport;
 import roadhog360.simpleskinbackport.client.ImageBufferDownloadPlayerSkin;
 import roadhog360.simpleskinbackport.core.Utils;
-import roadhog360.simpleskinbackport.ducks.INewModelData;
+import roadhog360.simpleskinbackport.ducks.IArmsState;
 
 @Mixin(value = SkinManager.class, priority = 1100)
 public class MixinSkinManager {
@@ -43,7 +43,7 @@ public class MixinSkinManager {
     @Inject(method = "func_152789_a",
         at = @At(value = "TAIL", target = "Lnet/minecraft/client/resources/SkinManager$SkinAvailableCallback;func_152121_a(Lcom/mojang/authlib/minecraft/MinecraftProfileTexture$Type;Lnet/minecraft/util/ResourceLocation;)V"))
     private void injectCallbackSkinCheck(MinecraftProfileTexture p_152789_1_, MinecraftProfileTexture.Type p_152789_2_, SkinManager.SkinAvailableCallback p_152789_3_, CallbackInfoReturnable<ResourceLocation> cir) {
-        if(Utils.isPlayer(p_152789_2_, p_152789_3_) && p_152789_3_ instanceof INewModelData playerData) {
+        if(Utils.isPlayer(p_152789_2_, p_152789_3_) && p_152789_3_ instanceof IArmsState playerData) {
             Utils.setSlimFromMetadata(p_152789_1_, playerData);
         }
     }

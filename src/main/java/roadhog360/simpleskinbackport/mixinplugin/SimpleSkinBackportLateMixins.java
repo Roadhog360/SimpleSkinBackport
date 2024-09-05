@@ -11,12 +11,15 @@ import java.util.Set;
 public class SimpleSkinBackportLateMixins implements ILateMixinLoader {
     @Override
     public String getMixinConfig() {
-        return "mixins.ssb.json";
+        return "mixins.ssb.late.json";
     }
 
     @Override
     public List<String> getMixins(Set<String> loadedMods) {
         List<String> mixins = new ArrayList<>();
+        if(loadedMods.contains("TwilightForest")) {
+            mixins.add("MixinRenderTFGiant");
+        }
         return mixins;
     }
 }

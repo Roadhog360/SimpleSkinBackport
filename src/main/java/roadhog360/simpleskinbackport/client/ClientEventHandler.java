@@ -1,19 +1,21 @@
-package roadhog360.simpleskinbackport.core;
+package roadhog360.simpleskinbackport.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import roadhog360.simpleskinbackport.ducks.INewModelData;
-import roadhog360.simpleskinbackport.ducks.ISwitchableArmsModel;
+import roadhog360.simpleskinbackport.ducks.IArmsState;
+import roadhog360.simpleskinbackport.ducks.INewBipedModel;
 
 public class ClientEventHandler {
     public static final ClientEventHandler INSTANCE = new ClientEventHandler();
@@ -25,15 +27,27 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onRenderEntity(RenderLivingEvent.Pre event) {
         checkAndSetArmsState(event.entity, event.renderer);
-        if(event.renderer instanceof RenderPlayer renderPlayer && event.entity instanceof EntityPlayer living) {
+        if(event.entity instanceof EntityLiving living) {
             ItemStack itemstack = living.getEquipmentInSlot(4);
-            renderPlayer.modelBipedMain.bipedHeadwear.showModel = itemstack == null || !isHead(itemstack.getItem());
+            boolean showHeadwear = itemstack == null || !isHead(itemstack.getItem());
+            if(event.renderer instanceof RenderPlayer renderPlayer) {
+                renderPlayer.modelBipedMain.bipedHeadwear.showModel = showHeadwear;
+            } else if (event.renderer instanceof RenderBiped renderBiped) {
+                renderBiped.modelBipedMain.bipedHeadwear.showModel = showHeadwear;
+            }
         }
     }
 
     private void checkAndSetArmsState(Entity entity, Render render) {
-        if(render instanceof RenderPlayer renderPlayer && renderPlayer.modelBipedMain instanceof ISwitchableArmsModel model
-            && entity instanceof INewModelData player) {
+        ModelBiped modelBiped;
+        if(render instanceof RenderPlayer renderPlayer) {
+            modelBiped = renderPlayer.modelBipedMain;
+        } else if (render instanceof RenderBiped renderBiped) {
+            modelBiped = renderBiped.modelBipedMain;
+        } else {
+            return;
+        }
+        if(modelBiped instanceof INewBipedModel model && entity instanceof IArmsState player) {
             model.simpleSkinBackport$setSlim(player.simpleSkinBackport$isSlim());
         }
     }

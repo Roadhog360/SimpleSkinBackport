@@ -8,22 +8,28 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import roadhog360.simpleskinbackport.core.Utils;
-import roadhog360.simpleskinbackport.ducks.INewModelData;
+import roadhog360.simpleskinbackport.ducks.IArmsState;
 
 @Mixin(AbstractClientPlayer.class)
-public abstract class MixinAbstractClientPlayer extends EntityPlayer implements SkinManager.SkinAvailableCallback, INewModelData {
+public abstract class MixinAbstractClientPlayer extends EntityPlayer implements SkinManager.SkinAvailableCallback, IArmsState {
 
     public MixinAbstractClientPlayer(World p_i45324_1_, GameProfile p_i45324_2_) {
         super(p_i45324_1_, p_i45324_2_);
     }
 
+    @Inject(method = "<init>", at = @At(value = "TAIL"))
+    private void setDefaultSkinState(World p_i45074_1_, GameProfile p_i45074_2_, CallbackInfo ci) {
+        simpleSkinBackport$setSlim(Utils.isDefaultSkinSlim(getPersistentID()));
+    }
+
     @Redirect(method = "getLocationSkin()Lnet/minecraft/util/ResourceLocation;",
         at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;locationStevePng:Lnet/minecraft/util/ResourceLocation;"))
     private ResourceLocation setNewDefaultSkinBehavior() {
-        simpleSkinBackport$setSlim(Utils.isDefaultSkinSlim(getUniqueID()));
-        return Utils.getDefaultSkin(getUniqueID());
+        return Utils.getDefaultSkin(getPersistentID());
     }
 
 //    UUID uuid = UUID.randomUUID();

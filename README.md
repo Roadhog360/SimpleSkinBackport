@@ -16,6 +16,7 @@ Current Features:
 - Fix overlap in hat layer when wearing a head
 - Hat layers on head blocks
 - New default skins alongside just Steve
+- Patch for Twilight Forest giants
 
 Todo:
 - Config
@@ -23,6 +24,6 @@ Todo:
   - Toggle new default skins (Either Steve/Alex or JUST Steve)
 
 Current incompatibility todo:
-- Twilight Forest giants
-- Smart Moving
+- Twilight Forest heads
+- Smart Moving (it's like 90% working slim models are just slightly wrong)
 - Botania Gaia Guardian
