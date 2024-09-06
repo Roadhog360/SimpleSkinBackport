@@ -3,6 +3,7 @@ package roadhog360.simpleskinbackport.mixinplugin;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import org.spongepowered.asm.mixin.MixinEnvironment;
+import roadhog360.simpleskinbackport.configuration.ConfigBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,12 @@ public class SimpleSkinBackportEarlyMixins implements IFMLLoadingPlugin, IEarlyM
 
     @Override
     public List<String> getMixins(Set<String> loadedCoreMods) {
+        try {
+            ConfigBase.initializeConfigs();
+        } catch (Exception e) {
+            throw new RuntimeException("Configs failed to load!", e);
+        }
+
         List<String> mixins = new ArrayList<>();
         mixins.add("MixinEntityPlayer");
         if (SIDE == MixinEnvironment.Side.CLIENT) {

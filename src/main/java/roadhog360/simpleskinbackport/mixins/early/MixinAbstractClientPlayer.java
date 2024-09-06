@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import roadhog360.simpleskinbackport.core.Utils;
+import roadhog360.simpleskinbackport.configuration.configs.ConfigMain;
 import roadhog360.simpleskinbackport.ducks.IArmsState;
 
 @Mixin(AbstractClientPlayer.class)
@@ -23,13 +23,13 @@ public abstract class MixinAbstractClientPlayer extends EntityPlayer implements 
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))
     private void setDefaultSkinState(World p_i45074_1_, GameProfile p_i45074_2_, CallbackInfo ci) {
-        simpleSkinBackport$setSlim(Utils.isDefaultSkinSlim(getPersistentID()));
+        simpleSkinBackport$setSlim(ConfigMain.defaultSkinSet.isDefaultSkinSlim(getPersistentID()));
     }
 
     @Redirect(method = "getLocationSkin()Lnet/minecraft/util/ResourceLocation;",
         at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;locationStevePng:Lnet/minecraft/util/ResourceLocation;"))
     private ResourceLocation setNewDefaultSkinBehavior() {
-        return Utils.getDefaultSkin(getPersistentID());
+        return ConfigMain.defaultSkinSet.getDefaultSkin(getPersistentID());
     }
 
 //    UUID uuid = UUID.randomUUID();
@@ -42,9 +42,11 @@ public abstract class MixinAbstractClientPlayer extends EntityPlayer implements 
 //    @WrapOperation(method = "getLocationSkin()Lnet/minecraft/util/ResourceLocation;",
 //        at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;locationSkin:Lnet/minecraft/util/ResourceLocation;", ordinal = 1))
 //    private ResourceLocation setNewSkinModel(AbstractClientPlayer instance, Operation<ResourceLocation> original) {
-//        boolean slim = Utils.isDefaultSkinSlim(uuid);
-//        ResourceLocation skin = Utils.getDefaultSkin(uuid);
-//        simpleSkinBackport$setSlim(slim);
-//        return skin;
+////        boolean slim = Utils.isDefaultSkinSlim(uuid);
+////        ResourceLocation skin = Utils.getDefaultSkin(uuid);
+////        simpleSkinBackport$setSlim(slim);
+////        return skin;
+//        simpleSkinBackport$setSlim(ConfigMain.defaultSkinSet.isDefaultSkinSlim(getPersistentID()));
+//        return ConfigMain.defaultSkinSet.getDefaultSkin(getPersistentID());
 //    }
 }
