@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8.5-GTNH",
   "package": "roadhog360.simpleskinbackport.mixins",
-  "refmap": "mixins.ssb.refmap.json",
+  "refmap": "mixins.simpleskinbackport.refmap.json",
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
   "overwrites": {

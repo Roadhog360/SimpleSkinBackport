@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = SimpleSkinBackport.MODID, version = Tags.VERSION, name = "SimpleSkinBackport", acceptedMinecraftVersions = "[1.7.10]")
 public class SimpleSkinBackport {
-    public static final String MODID = "ssb";
+    public static final String MODID = "simpleskinbackport";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
     @SidedProxy(clientSide = "roadhog360.simpleskinbackport.ClientProxy", serverSide = "roadhog360.simpleskinbackport.CommonProxy")
