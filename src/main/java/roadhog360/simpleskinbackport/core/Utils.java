@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.properties.Property;
+import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
@@ -176,6 +177,13 @@ public class Utils {
         base.textureHeight = height;
         base.boxList.forEach(box -> box.setTextureSize(width, height));
         base.boxList.forEach(Utils::remakeBoxes);
+    }
+
+    public static boolean isClientPlayerSlim() {
+        if(FMLClientHandler.instance().getClientPlayerEntity() instanceof IArmsState player) {
+            return player.simpleSkinBackport$isSlim();
+        }
+        return false;
     }
 
     /**

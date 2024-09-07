@@ -56,17 +56,19 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
 
         if(!simpleSkinBackport$isPlayerModel()) {
             boolean isPlayerRenderer;
+            boolean isGaia;
             //Do all this OUTSIDE of the if bracket, so we can find and add cases for classes that use size > 0
             try {
                 Class<?> caller = Class.forName(Utils.getCallerClassName());
-                isPlayerRenderer = caller.isAssignableFrom(RenderPlayer.class)
+                isGaia = caller.getName().equals("vazkii.botania.client.render.entity.RenderDoppleganger");
+                isPlayerRenderer = caller.isAssignableFrom(RenderPlayer.class) || isGaia
                     || caller.getName().equals("net.smart.render.ModelPlayer") || caller.getName().contains("RenderTFGiant");
                 //We need a way to check if it's a player model, without modifying the RenderPlayer.
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
 
-            if (size == 0 || size == 0.0625F) {
+            if (size == 0 || size == 0.0625F || isGaia) {
                 //TODO: Might have to add special exceptions for big models, I think this is model size so I named it as such.
                 // Mods that add giant (or small) players will need special treatment.
                 if (isPlayerRenderer) {

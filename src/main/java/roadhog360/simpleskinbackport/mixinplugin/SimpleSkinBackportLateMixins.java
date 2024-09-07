@@ -22,9 +22,14 @@ public class SimpleSkinBackportLateMixins implements ILateMixinLoader {
     @Override
     public List<String> getMixins(Set<String> loadedMods) {
         List<String> mixins = new ArrayList<>();
-        if(loadedMods.contains("TwilightForest")) {
-            if(SIDE == MixinEnvironment.Side.CLIENT) {
-                mixins.add("MixinRenderTFGiant");
+        if(SIDE == MixinEnvironment.Side.CLIENT) {
+            if(loadedMods.contains("TwilightForest")) {
+                mixins.add("twilightforest.MixinRenderTFGiant");
+            }
+            if(loadedMods.contains("Botania")) {
+                mixins.add("botania.MixinClientProxy");
+                mixins.add("botania.MixinRenderTileSkullOverride");
+                mixins.add("botania.MixinRenderDoppelganger");
             }
         }
         return mixins;

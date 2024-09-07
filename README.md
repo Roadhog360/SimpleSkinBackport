@@ -17,16 +17,16 @@ Current Features:
 - Hat layers on head blocks
 - New default skins alongside just Steve
 - Patch for Twilight Forest giants
+- Patch for Botania's Gaia Guardian
 
 Todo:
 - Config
+  - Fix regular heads not working without a UUID when worn as a helmet
   - Toggle head block inventory icon render
-  - Toggle new default skins (Either Steve/Alex or JUST Steve)
 
 Current incompatibility todo:
-- Twilight Forest heads
+- Twilight Forest heads are not 3D
 - Smart Moving (it's like 90% working slim models are just slightly wrong)
-- Botania Gaia Guardian
 
 Current wontfix incompatibilities: (Might change my mind later, PRs welcome)
 - OptiFine
