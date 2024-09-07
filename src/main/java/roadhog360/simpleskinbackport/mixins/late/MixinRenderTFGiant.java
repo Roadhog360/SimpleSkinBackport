@@ -24,12 +24,12 @@ public abstract class MixinRenderTFGiant extends RenderBiped {
     @Inject(method = "getEntityTexture", at = @At(value = "HEAD"), cancellable = true)
     private void overrideSkinAndSetResourceLocation(Entity par1Entity, CallbackInfoReturnable<ResourceLocation> cir) {
         boolean usePlayerModel = ConfigModCompat.TFgiantSkinSet == null;
-        boolean slim = usePlayerModel ? simpleSkinBackport$isClientPlayerSlim() : ConfigModCompat.TFgiantSkinSet.isDefaultSkinSlim(par1Entity.getPersistentID());
+        boolean slim = usePlayerModel ? simpleSkinBackport$isClientPlayerSlim() : ConfigModCompat.TFgiantSkinSet.getDefaultSkin(par1Entity.getPersistentID()).isSlim();
         if(this.modelBipedMain instanceof INewBipedModel model) {
             model.simpleSkinBackport$setSlim(slim);
         }
         if(!usePlayerModel) {
-            cir.setReturnValue(ConfigModCompat.TFgiantSkinSet.getDefaultSkin(par1Entity.getPersistentID()));
+            cir.setReturnValue(ConfigModCompat.TFgiantSkinSet.getDefaultSkin(par1Entity.getPersistentID()).getResource());
         }
     }
 

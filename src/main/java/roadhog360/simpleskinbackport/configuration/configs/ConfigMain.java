@@ -7,10 +7,11 @@ import java.io.File;
 
 public class ConfigMain extends ConfigBase {
 
-    public static DefaultPlayerSkin.Set defaultSkinSet;
+    public static DefaultPlayerSkin.Set defaultSkinSet = DefaultPlayerSkin.Set.ALL_DEFAULTS;
+    public static boolean oldSlimArms = false;
 
     static final String catSkins = "skins";
-    static final String catHeads = "skins";
+    static final String catHeads = "heads";
 
     public ConfigMain(File file) {
         super(file);
@@ -18,6 +19,7 @@ public class ConfigMain extends ConfigBase {
         getCategory(catSkins).setComment("Settings for mod-specific patches.");
 
         configCats.add(getCategory(catSkins));
+        configCats.add(getCategory(catHeads));
     }
 
     @Override
@@ -30,5 +32,9 @@ public class ConfigMain extends ConfigBase {
                     Each set contains the following skins:
                     """ + ConfigBase.getSkinReplacementDescriptions(), ConfigBase.getSkinReplacementModes(false))
         );
+        oldSlimArms = getBoolean("oldSlimArms", catSkins, false,
+           """
+            Before 1.15, slim-armed skins were a half-pixel lower than the player's torso. Set this to true to re-enable that behavior.
+            """);
     }
 }

@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import roadhog360.simpleskinbackport.configuration.configs.ConfigMain;
 import roadhog360.simpleskinbackport.core.ArmPair;
 import roadhog360.simpleskinbackport.core.Utils;
 import roadhog360.simpleskinbackport.ducks.INewBipedModel;
@@ -113,6 +114,9 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
     @Unique
     private ArmPair simpleSkinBackport$slimArmwear;
 
+    @Unique
+    private float simpleSkinBackport$armsRotationPointY;
+
     /**
      * Creates the ModelBox instances used for slim arms. Creates dummy models currently, this could probably be more efficient...
      */
@@ -158,6 +162,8 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
 
         simpleSkinBackport$wideArmwear = ArmPair.of(simpleSkinBackport$bipedLeftArmwear, simpleSkinBackport$bipedRightArmwear);
         simpleSkinBackport$slimArmwear = ArmPair.of(tempLeftArmwearSlim, tempRightArmwearSlim);
+
+        simpleSkinBackport$armsRotationPointY = bipedLeftArm.rotationPointY;
     }
 
     @Override
@@ -168,6 +174,15 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
 //        }
 
         if(simpleSkinBackport$isPlayerModel) {
+            if(ConfigMain.oldSlimArms) {
+                if (slim) {
+                    bipedLeftArm.rotationPointY = simpleSkinBackport$armsRotationPointY + 0.5F;
+                    bipedRightArm.rotationPointY = simpleSkinBackport$armsRotationPointY + 0.5F;
+                } else {
+                    bipedLeftArm.rotationPointY = simpleSkinBackport$armsRotationPointY;
+                    bipedRightArm.rotationPointY = simpleSkinBackport$armsRotationPointY;
+                }
+            }
             ArmPair arms = slim ? simpleSkinBackport$slimArms : simpleSkinBackport$wideArms;
             ArmPair armwear = slim ? simpleSkinBackport$slimArmwear : simpleSkinBackport$wideArmwear;
             bipedLeftArm.displayList = arms.getLeftDisplayList();

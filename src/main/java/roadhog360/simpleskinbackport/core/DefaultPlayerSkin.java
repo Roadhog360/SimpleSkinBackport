@@ -1,37 +1,27 @@
 package roadhog360.simpleskinbackport.core;
 
 import com.google.common.collect.Lists;
-import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class DefaultPlayerSkin {
-    private static final ResourceLocation[] DEFAULT_SKINS = new ResourceLocation[] {
-        new ResourceLocation("textures/entity/player/slim/alex.png"),
-        new ResourceLocation("textures/entity/player/slim/ari.png"),
-        new ResourceLocation("textures/entity/player/slim/efe.png"),
-        new ResourceLocation("textures/entity/player/slim/kai.png"),
-        new ResourceLocation("textures/entity/player/slim/makena.png"),
-        new ResourceLocation("textures/entity/player/slim/noor.png"),
-        new ResourceLocation("textures/entity/player/slim/steve.png"),
-        new ResourceLocation("textures/entity/player/slim/sunny.png"),
-        new ResourceLocation("textures/entity/player/slim/zuri.png"),
+    private static final PlayerSkin[] DEFAULT_SKINS = new PlayerSkin[] {
+        new PlayerSkin(true, "alex"), new PlayerSkin(true, "ari"),
+        new PlayerSkin(true, "efe"), new PlayerSkin(true, "kai"),
+        new PlayerSkin(true, "makena"), new PlayerSkin(true, "noor"),
+        new PlayerSkin(true, "steve"), new PlayerSkin(true, "sunny"),
+        new PlayerSkin(true, "zuri"),
 
-        new ResourceLocation("textures/entity/player/wide/alex.png"),
-        new ResourceLocation("textures/entity/player/wide/ari.png"),
-        new ResourceLocation("textures/entity/player/wide/efe.png"),
-        new ResourceLocation("textures/entity/player/wide/kai.png"),
-        new ResourceLocation("textures/entity/player/wide/makena.png"),
-        new ResourceLocation("textures/entity/player/wide/noor.png"),
-        new ResourceLocation("textures/entity/player/wide/steve.png"),
-        new ResourceLocation("textures/entity/player/wide/sunny.png"),
-        new ResourceLocation("textures/entity/player/wide/zuri.png")};
+        new PlayerSkin(false, "alex"), new PlayerSkin(false, "ari"),
+        new PlayerSkin(false, "efe"), new PlayerSkin(false, "kai"),
+        new PlayerSkin(false, "makena"), new PlayerSkin(false, "noor"),
+        new PlayerSkin(false, "steve"), new PlayerSkin(false, "sunny"),
+        new PlayerSkin(false, "zuri")};
 
-    public static final ResourceLocation ALEX = DEFAULT_SKINS[0];
-    public static final ResourceLocation STEVE = DEFAULT_SKINS[15];
+    public static final PlayerSkin ALEX = DEFAULT_SKINS[0];
+    public static final PlayerSkin STEVE = DEFAULT_SKINS[15];
 
     public static final UUID NULL_UUID = UUID.randomUUID(); //Used if the UUID passed in is somehow null.
 
@@ -44,33 +34,23 @@ public class DefaultPlayerSkin {
 //        BONUS_CHARACTERS, //Some of the alternate skins from the old legacy console default skin packs. Currently not implemented
         ;
 
-        private final List<Pair<ResourceLocation, Boolean>> skins = Lists.newLinkedList();
+        private final List<PlayerSkin> skins = Lists.newLinkedList();
         private final String description;
 
-        Set(String description, ResourceLocation... locs) {
+        Set(String description, PlayerSkin... locs) {
             this.description = description;
-            for(ResourceLocation location : locs) {
-                skins.add(Pair.of(location, location.toString().contains("slim")));
-            }
+            skins.addAll(Arrays.asList(locs));
         }
 
-        public ResourceLocation getDefaultSkin(int index) {
-            return getEntryFromIndex(index).getLeft();
+        public PlayerSkin getDefaultSkin(int index) {
+            return getEntryFromIndex(index);
         }
 
-        public ResourceLocation getDefaultSkin(UUID uuid) {
-            return getDefaultSkin(uuid.hashCode());
+        public PlayerSkin getDefaultSkin(UUID uuid) {
+            return getDefaultSkin((uuid == null ? NULL_UUID : uuid).hashCode());
         }
 
-        public boolean isDefaultSkinSlim(int index) {
-            return getEntryFromIndex(index).getRight();
-        }
-
-        public boolean isDefaultSkinSlim(UUID uuid) {
-            return isDefaultSkinSlim(uuid.hashCode());
-        }
-
-        private Pair<ResourceLocation, Boolean> getEntryFromIndex(int index) {
+        private PlayerSkin getEntryFromIndex(int index) {
             if(skins.isEmpty()) {
                 throw new RuntimeException("Default skin set " + name() + " had empty skin list. What are you doing!?");
             }
