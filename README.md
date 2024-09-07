@@ -27,3 +27,6 @@ Current incompatibility todo:
 - Twilight Forest heads
 - Smart Moving (it's like 90% working slim models are just slightly wrong)
 - Botania Gaia Guardian
+
+Current wontfix incompatibilities: (Might change my mind later, PRs welcome)
+- OptiFine
