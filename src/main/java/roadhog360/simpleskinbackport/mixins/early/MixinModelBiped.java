@@ -76,28 +76,10 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
 
     @Inject(method = "<init>(FFII)V", at = @At("TAIL"))
     private void injectNewLimbs(float size, float p_i1149_2_, int texWidth, int texHeight, CallbackInfo ci) {
-        if (simpleSkinBackport$isPlayerModel()) {
-            Utils.remakeBoxes(bipedCloak.setTextureSize(64, 32));
-
-            Utils.setAllBoxesTransparent(bipedHeadwear);
-
-            bipedLeftArm.mirror = false;
-            Utils.changeTextureOffset(bipedLeftArm, 32, 48);
-            //Right arm is fine as it is and doesn't need any transformation.
-
-            simpleSkinBackport$bipedLeftArmwear = Utils.cloneModel(this, bipedLeftArm, 48, 48,true, Utils.BoxTransformType.HAT);
-            simpleSkinBackport$bipedRightArmwear = Utils.cloneModel(this, bipedRightArm, 40, 32,true, Utils.BoxTransformType.HAT);
-
-            bipedLeftLeg.mirror = false;
-            Utils.changeTextureOffset(bipedLeftLeg, 16, 48);
-            //Right leg is fine as it is and doesn't need any transformation.
-
-            simpleSkinBackport$bipedLeftLegwear = Utils.cloneModel(this, bipedLeftLeg, 0, 48,true, Utils.BoxTransformType.HAT);
-            simpleSkinBackport$bipedRightLegwear = Utils.cloneModel(this, bipedRightLeg, 0, 32,true, Utils.BoxTransformType.HAT);
-
-            simpleSkinBackport$bipedBodyWear = Utils.cloneModel(this, bipedBody, 16, 32,true, Utils.BoxTransformType.HAT);
-
-            simpleSkinBackport$createBoxes();
+        Utils.setAllBoxesTransparent(bipedHeadwear);
+        if (simpleSkinBackport$isPlayerModel() && textureWidth == 64 && (textureHeight == 32 || textureHeight == 64)) {
+            simpleSkinBackport$setupBoxes();
+            simpleSkinBackport$createArmBoxes();
         }
     }
 
@@ -114,39 +96,33 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
     @Unique
     private float simpleSkinBackport$armsRotationPointY;
 
+    @Unique
+    private void simpleSkinBackport$setupBoxes() {
+        if(textureHeight == 64) {
+            Utils.remakeBoxes(bipedCloak.setTextureSize(textureWidth, 32));
+
+            bipedLeftArm.mirror = false;
+            Utils.changeTextureOffset(bipedLeftArm, 32, 48);
+
+            simpleSkinBackport$bipedLeftArmwear = Utils.cloneModel(this, bipedLeftArm, 48, 48, true, Utils.BoxTransformType.HAT);
+            simpleSkinBackport$bipedRightArmwear = Utils.cloneModel(this, bipedRightArm, 40, 32, true, Utils.BoxTransformType.HAT);
+
+            bipedLeftLeg.mirror = false;
+            Utils.changeTextureOffset(bipedLeftLeg, 16, 48);
+            //Right leg is fine as it is and doesn't need any transformation.
+
+            simpleSkinBackport$bipedLeftLegwear = Utils.cloneModel(this, bipedLeftLeg, 0, 48, true, Utils.BoxTransformType.HAT);
+            simpleSkinBackport$bipedRightLegwear = Utils.cloneModel(this, bipedRightLeg, 0, 32, true, Utils.BoxTransformType.HAT);
+
+            simpleSkinBackport$bipedBodyWear = Utils.cloneModel(this, bipedBody, 16, 32, true, Utils.BoxTransformType.HAT);
+        }
+    }
+
     /**
      * Creates the ModelBox instances used for slim arms. Creates dummy models currently, this could probably be more efficient...
      */
     @Unique
-    private void simpleSkinBackport$createBoxes() {
-        //Experimental code where I re-make everything and initialize the boxes when the slim/wide arm request is made
-        //Because that can only mean this is a player model. Had a few issues with it though...
-        //1 is for some reason the head's hat layer would always be merged with the head itself. Might be precision lost on reconstructing the ModelBoxes
-        //Secondly was it didn't fix the right arm issue with Smart Moving like I wanted it to...
-//        Utils.changeTextureSize(this, 64, 64);
-//
-//        Utils.remakeBoxes(bipedCloak.setTextureSize(64, 32));
-//
-//        Utils.setAllBoxesTransparent(bipedHeadwear);
-//
-//        bipedLeftArm.mirror = false;
-//        Utils.changeTextureOffset(bipedLeftArm, 32, 48);
-//        //Right arm is fine as it is and doesn't need any transformation.
-//        Utils.remakeBoxes(bipedRightArm);
-//
-//        simpleSkinBackport$bipedLeftArmwear = Utils.cloneModel(this, bipedLeftArm, 48, 48,true, Utils.BoxTransformType.HAT);
-//        simpleSkinBackport$bipedRightArmwear = Utils.cloneModel(this, bipedRightArm, 40, 32,true, Utils.BoxTransformType.HAT);
-//
-//        bipedLeftLeg.mirror = false;
-//        Utils.changeTextureOffset(bipedLeftLeg, 16, 48);
-//        //Right leg is fine as it is and doesn't need any transformation.
-//        Utils.remakeBoxes(bipedRightLeg);
-//
-//        simpleSkinBackport$bipedLeftLegwear = Utils.cloneModel(this, bipedLeftLeg, 0, 48,true, Utils.BoxTransformType.HAT);
-//        simpleSkinBackport$bipedRightLegwear = Utils.cloneModel(this, bipedRightLeg, 0, 32,true, Utils.BoxTransformType.HAT);
-//
-//        simpleSkinBackport$bipedBodyWear = Utils.cloneModel(this, bipedBody, 16, 32,true, Utils.BoxTransformType.HAT);
-
+    private void simpleSkinBackport$createArmBoxes() {
         ModelRenderer tempLeftArmSlim = Utils.cloneModel(this, bipedLeftArm, false, Utils.BoxTransformType.SLIM_ARM);
         ModelRenderer tempRightArmSlim = Utils.cloneModel(this, bipedRightArm, false, Utils.BoxTransformType.SLIM_RIGHT_ARM);
         ModelRenderer tempLeftArmwearSlim = Utils.setAllBoxesTransparent(Utils.cloneModel(
@@ -163,15 +139,24 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
         simpleSkinBackport$armsRotationPointY = bipedLeftArm.rotationPointY;
     }
 
+    private void simpleSkinBackport$set64x() {
+        if(textureHeight == 32) {
+            textureHeight = 64;
+
+            Utils.changeTextureSize(this, textureWidth, 64);
+
+            Utils.remakeBoxes(bipedRightArm);
+            Utils.remakeBoxes(bipedRightLeg);
+
+            simpleSkinBackport$setupBoxes();
+            simpleSkinBackport$createArmBoxes();
+        }
+    }
+
     @Override
     public void simpleSkinBackport$setSlim(boolean slim) {
-//        if(!simpleSkinBackport$isPlayerModel) {
-//            simpleSkinBackport$createBoxes();
-//            simpleSkinBackport$isPlayerModel = true;
-//        }
-
-        if(simpleSkinBackport$isPlayerModel) {
-            if(ConfigMain.oldSlimArms) {
+        if(simpleSkinBackport$isPlayerModel()) {
+            if (ConfigMain.oldSlimArms) {
                 if (slim) {
                     bipedLeftArm.rotationPointY = simpleSkinBackport$armsRotationPointY + 0.5F;
                     bipedRightArm.rotationPointY = simpleSkinBackport$armsRotationPointY + 0.5F;

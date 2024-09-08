@@ -134,9 +134,11 @@ public class Utils {
         int boxMaxX = MathHelper.floor_float(box.posX2 - box.posX1);
         int boxMaxY = MathHelper.floor_float(box.posY2 - box.posY1);
         int boxMaxZ = MathHelper.floor_float(box.posZ2 - box.posZ1);
-//        if(box.posX2 - box.posX1 > 0 || box.posY2 - box.posY1 > 0 || box.posZ2 - box.posZ1 > 0) {
-//            size = Math.max(Math.max(box.posX2 - box.posX1, box.posY2 - box.posY1), box.posZ2 - box.posZ1);
-//        }
+        //The size value gets baked into the box. We need to do this to not lose precision
+        float precision = Math.max(Math.max(boxMinX % 1, boxMinY % 1), boxMinZ % 1);
+        if(Math.abs(precision) > 0.001) {
+            size = precision;
+        }
         if(transform.isHatLayer()) {
             size += 0.25F;
         }
@@ -174,15 +176,10 @@ public class Utils {
         return new ModelBox(renderer, renderer.textureOffsetX, renderer.textureOffsetY, boxMinX, boxMinY, boxMinZ, boxMaxX, boxMaxY, boxMaxZ, size);
     }
 
-    private static final ThreadLocal<ModelRenderer> DUMMY_MODEL = ThreadLocal.withInitial(() -> new ModelRenderer(new ModelBase(){}, 64, 64));
-
     public static int createDisplaylistFor(ModelRenderer renderer) {
-        DUMMY_MODEL.get().displayList = 0; //OptiFine for some reason checks if the display list is 0 and things get fucky if it isn't
-        DUMMY_MODEL.get().cubeList = renderer.cubeList;
-        DUMMY_MODEL.get().compileDisplayList(0.0625F);
-        renderer.displayList = DUMMY_MODEL.get().displayList;
-        renderer.compiled = true;
-        return DUMMY_MODEL.get().displayList;
+        renderer.displayList = 0; //OptiFine for some reason checks if the display list is 0 and things get fucky if it isn't
+        renderer.compileDisplayList(0.0625F);
+        return renderer.displayList;
     }
 
     public static void changeTextureSize(ModelBase base, int width, int height) {
