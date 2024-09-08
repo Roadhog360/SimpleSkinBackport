@@ -21,10 +21,14 @@ Current Features:
 - Works with OptiFine
 
 Todo:
+- 3D head rendering in inventory
 - Config
   - Fix regular heads not working without a UUID when worn as a helmet
   - Toggle head block inventory icon render
 
 Current incompatibility todo:
-- Twilight Forest heads are not 3D
+- Twilight Forest heads are not 3D in inventory
+- Iguana Tinker Tweaks heads are not 3D in inventory
+- Tinkers' Construct gold upgrade heads are not 3D in inventory
+- HEE's enderman head is not 3D in inventory
 - Smart Moving (it's like 90% working slim models are just slightly wrong)
