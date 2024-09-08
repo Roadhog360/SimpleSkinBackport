@@ -17,6 +17,7 @@ import roadhog360.simpleskinbackport.ducks.IArmsState;
 import roadhog360.simpleskinbackport.ducks.ITransparentBox;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -54,20 +55,26 @@ public class Utils {
         return type == MinecraftProfileTexture.Type.SKIN && callback instanceof EntityPlayer;
     }
 
-    public static String getCallerClassName() {
+    public static boolean isCallerAssignableFrom(Class<?>... assignables) {
         StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
-        String callerClassName = null;
-        for (int i=1; i<stElements.length; i++) {
-            StackTraceElement ste = stElements[i];
-            if (!ste.getClassName().equals(Utils.class.getName())&& ste.getClassName().indexOf("java.lang.Thread")!=0) {
-                if (callerClassName==null) {
-                    callerClassName = ste.getClassName();
-                } else if (!callerClassName.equals(ste.getClassName())) {
-                    return ste.getClassName();
+        return Arrays.stream(stElements, 4, stElements.length).anyMatch(
+            element -> Arrays.stream(assignables).anyMatch(
+            assignable -> {
+                try {
+                    return assignable.isAssignableFrom(Class.forName(element.getClassName()));
+                } catch (ClassNotFoundException ignored) {
+                    return false;
                 }
-            }
-        }
-        return null;
+            })
+        );
+    }
+
+    public static boolean isCallerNameEqualTo(String... assignables) {
+        StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
+        return Arrays.stream(stElements, 4, stElements.length).anyMatch(
+            element -> Arrays.stream(assignables).anyMatch(
+                assignable -> assignable.equals(element.getClassName()))
+        );
     }
 
     public static ModelRenderer setAllChildBoxesTransparent(ModelRenderer renderer) {
@@ -127,6 +134,9 @@ public class Utils {
         int boxMaxX = MathHelper.floor_float(box.posX2 - box.posX1);
         int boxMaxY = MathHelper.floor_float(box.posY2 - box.posY1);
         int boxMaxZ = MathHelper.floor_float(box.posZ2 - box.posZ1);
+//        if(box.posX2 - box.posX1 > 0 || box.posY2 - box.posY1 > 0 || box.posZ2 - box.posZ1 > 0) {
+//            size = Math.max(Math.max(box.posX2 - box.posX1, box.posY2 - box.posY1), box.posZ2 - box.posZ1);
+//        }
         if(transform.isHatLayer()) {
             size += 0.25F;
         }
