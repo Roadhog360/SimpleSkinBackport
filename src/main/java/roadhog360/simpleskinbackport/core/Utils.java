@@ -174,11 +174,14 @@ public class Utils {
         return new ModelBox(renderer, renderer.textureOffsetX, renderer.textureOffsetY, boxMinX, boxMinY, boxMinZ, boxMaxX, boxMaxY, boxMaxZ, size);
     }
 
-    private static ThreadLocal<ModelRenderer> DUMMY_MODEL = ThreadLocal.withInitial(() -> new ModelRenderer(new ModelBase(){}, 64, 64));
+    private static final ThreadLocal<ModelRenderer> DUMMY_MODEL = ThreadLocal.withInitial(() -> new ModelRenderer(new ModelBase(){}, 64, 64));
 
     public static int createDisplaylistFor(ModelRenderer renderer) {
+        DUMMY_MODEL.get().displayList = 0; //OptiFine for some reason checks if the display list is 0 and things get fucky if it isn't
         DUMMY_MODEL.get().cubeList = renderer.cubeList;
         DUMMY_MODEL.get().compileDisplayList(0.0625F);
+        renderer.displayList = DUMMY_MODEL.get().displayList;
+        renderer.compiled = true;
         return DUMMY_MODEL.get().displayList;
     }
 

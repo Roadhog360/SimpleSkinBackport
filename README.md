@@ -18,6 +18,7 @@ Current Features:
 - New default skins alongside just Steve
 - Patch for Twilight Forest giants
 - Patch for Botania's Gaia Guardian
+- Works with OptiFine
 
 Todo:
 - Config
@@ -27,6 +28,3 @@ Todo:
 Current incompatibility todo:
 - Twilight Forest heads are not 3D
 - Smart Moving (it's like 90% working slim models are just slightly wrong)
-
-Current wontfix incompatibilities: (Might change my mind later, PRs welcome)
-- OptiFine
