@@ -13,6 +13,7 @@ import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import roadhog360.simpleskinbackport.core.Utils;
 import roadhog360.simpleskinbackport.ducks.IArmsState;
 import roadhog360.simpleskinbackport.ducks.INewBipedModel;
 
@@ -26,6 +27,7 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onRenderEntity(RenderLivingEvent.Pre event) {
         checkAndSetArmsState(event.entity, event.renderer);
+
         ItemStack itemstack = event.entity.getEquipmentInSlot(4);
         boolean showHeadwear = itemstack == null || !isHead(itemstack.getItem());
         if(event.renderer instanceof RenderPlayer renderPlayer) {
@@ -36,16 +38,18 @@ public class ClientEventHandler {
     }
 
     private void checkAndSetArmsState(Entity entity, Render render) {
-        ModelBiped modelBiped;
+        ModelBiped modelBiped = null;
         if(render instanceof RenderPlayer renderPlayer) {
             modelBiped = renderPlayer.modelBipedMain;
         } else if (render instanceof RenderBiped renderBiped) {
             modelBiped = renderBiped.modelBipedMain;
-        } else {
-            return;
         }
-        if(modelBiped instanceof INewBipedModel model && entity instanceof IArmsState player) {
-            model.simpleSkinBackport$setSlim(player.simpleSkinBackport$isSlim());
+        if(modelBiped instanceof INewBipedModel model) {
+            if(entity instanceof IArmsState player) {
+                model.simpleSkinBackport$setSlim(player.simpleSkinBackport$isSlim());
+            } else if(Utils.rendererCopiesPlayerSkin(render)) {
+                model.simpleSkinBackport$setSlim(Utils.isClientPlayerSlim());
+            }
         }
     }
 

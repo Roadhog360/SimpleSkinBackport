@@ -4,6 +4,7 @@ import com.gtnewhorizon.gtnhmixins.ILateMixinLoader;
 import com.gtnewhorizon.gtnhmixins.LateMixin;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import roadhog360.simpleskinbackport.SimpleSkinBackport;
+import roadhog360.simpleskinbackport.configuration.configs.ConfigModCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,13 @@ public class SimpleSkinBackportLateMixins implements ILateMixinLoader {
         List<String> mixins = new ArrayList<>();
         if(SIDE == MixinEnvironment.Side.CLIENT) {
             if(loadedMods.contains("TwilightForest")) {
-                mixins.add("twilightforest.MixinRenderTFGiant");
+                if(ConfigModCompat.TFgiantSkinSet != null) {
+                    mixins.add("twilightforest.MixinRenderTFGiant");
+                }
             }
             if(loadedMods.contains("Botania")) {
                 mixins.add("botania.MixinClientProxy");
                 mixins.add("botania.MixinRenderTileSkullOverride");
-                mixins.add("botania.MixinRenderDoppelganger");
             }
         }
         return mixins;

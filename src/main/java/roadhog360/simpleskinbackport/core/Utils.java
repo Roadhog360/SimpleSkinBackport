@@ -10,14 +10,16 @@ import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
+import roadhog360.simpleskinbackport.configuration.configs.ConfigModCompat;
 import roadhog360.simpleskinbackport.ducks.IArmsState;
+import roadhog360.simpleskinbackport.ducks.IBoxSizeGetter;
 import roadhog360.simpleskinbackport.ducks.ITransparentBox;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -53,28 +55,6 @@ public class Utils {
 
     public static boolean isPlayer(MinecraftProfileTexture.Type type, SkinManager.SkinAvailableCallback callback) {
         return type == MinecraftProfileTexture.Type.SKIN && callback instanceof EntityPlayer;
-    }
-
-    public static boolean isCallerAssignableFrom(Class<?>... assignables) {
-        StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
-        return Arrays.stream(stElements, 4, stElements.length).anyMatch(
-            element -> Arrays.stream(assignables).anyMatch(
-            assignable -> {
-                try {
-                    return assignable.isAssignableFrom(Class.forName(element.getClassName()));
-                } catch (ClassNotFoundException ignored) {
-                    return false;
-                }
-            })
-        );
-    }
-
-    public static boolean isCallerNameEqualTo(String... assignables) {
-        StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
-        return Arrays.stream(stElements, 4, stElements.length).anyMatch(
-            element -> Arrays.stream(assignables).anyMatch(
-                assignable -> assignable.equals(element.getClassName()))
-        );
     }
 
     public static ModelRenderer setAllChildBoxesTransparent(ModelRenderer renderer) {
@@ -127,17 +107,15 @@ public class Utils {
     }
 
     public static ModelBox cloneBox(ModelBox box, ModelRenderer to, BoxTransformType transform) {
-        float size = 0;
         float boxMinX = box.posX1;
         float boxMinY = box.posY1;
         float boxMinZ = box.posZ1;
         int boxMaxX = MathHelper.floor_float(box.posX2 - box.posX1);
         int boxMaxY = MathHelper.floor_float(box.posY2 - box.posY1);
         int boxMaxZ = MathHelper.floor_float(box.posZ2 - box.posZ1);
-        //The size value gets baked into the box. We need to do this to not lose precision
-        float precision = Math.max(Math.max(boxMinX % 1, boxMinY % 1), boxMinZ % 1);
-        if(Math.abs(precision) > 0.001) {
-            size = precision;
+        float size = 0;
+        if(box instanceof IBoxSizeGetter boxWithSize) {
+            size = boxWithSize.simpleSkinBackport$getSize();
         }
         if(transform.isHatLayer()) {
             size += 0.25F;
@@ -194,6 +172,11 @@ public class Utils {
             return player.simpleSkinBackport$isSlim();
         }
         return false;
+    }
+
+    public static boolean rendererCopiesPlayerSkin(Render renderer) {
+        return renderer.getClass().getName().equals("vazkii.botania.client.render.entity.RenderDoppleganger")
+            || (ConfigModCompat.TFgiantSkinSet == null && renderer.getClass().getName().equals("twilightforest.client.renderer.entity.RenderTFGiant"));
     }
 
     /**

@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import roadhog360.simpleskinbackport.configuration.configs.ConfigModCompat;
-import roadhog360.simpleskinbackport.core.Utils;
+import roadhog360.simpleskinbackport.core.PlayerSkin;
 import roadhog360.simpleskinbackport.ducks.INewBipedModel;
 import twilightforest.client.renderer.entity.RenderTFGiant;
 
@@ -19,15 +19,15 @@ public abstract class MixinRenderTFGiant extends RenderBiped {
         super(p_i1257_1_, p_i1257_2_);
     }
 
+    /**
+     * Mixin is not enabled when TFgiantSkinSet is null since we don't need to change any code otherwise.
+     */
     @Inject(method = "getEntityTexture", at = @At(value = "HEAD"), cancellable = true)
     private void overrideSkinAndSetResourceLocation(Entity par1Entity, CallbackInfoReturnable<ResourceLocation> cir) {
-        boolean usePlayerModel = ConfigModCompat.TFgiantSkinSet == null;
-        boolean slim = usePlayerModel ? Utils.isClientPlayerSlim() : ConfigModCompat.TFgiantSkinSet.getDefaultSkin(par1Entity.getPersistentID()).isSlim();
+        PlayerSkin skin = ConfigModCompat.TFgiantSkinSet.getDefaultSkin(par1Entity.getPersistentID());
         if(this.modelBipedMain instanceof INewBipedModel model) {
-            model.simpleSkinBackport$setSlim(slim);
-        }
-        if(!usePlayerModel) {
-            cir.setReturnValue(ConfigModCompat.TFgiantSkinSet.getDefaultSkin(par1Entity.getPersistentID()).getResource());
+            model.simpleSkinBackport$setSlim(skin.isSlim());
+            cir.setReturnValue(skin.getResource());
         }
     }
 }
