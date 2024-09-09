@@ -76,8 +76,8 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
 
     @Inject(method = "<init>(FFII)V", at = @At("TAIL"))
     private void injectNewLimbs(float size, float p_i1149_2_, int texWidth, int texHeight, CallbackInfo ci) {
-        Utils.setAllBoxesTransparent(bipedHeadwear);
         if (simpleSkinBackport$isPlayerModel() && textureWidth == 64 && (textureHeight == 32 || textureHeight == 64)) {
+            Utils.setAllBoxesTransparent(bipedHeadwear);
             simpleSkinBackport$setupBoxes();
             simpleSkinBackport$createArmBoxes();
         }
@@ -103,6 +103,7 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
 
             bipedLeftArm.mirror = false;
             Utils.changeTextureOffset(bipedLeftArm, 32, 48);
+            //Right arm is fine as it is and doesn't need any transformation.
 
             simpleSkinBackport$bipedLeftArmwear = Utils.cloneModel(this, bipedLeftArm, 48, 48, true, Utils.BoxTransformType.HAT);
             simpleSkinBackport$bipedRightArmwear = Utils.cloneModel(this, bipedRightArm, 40, 32, true, Utils.BoxTransformType.HAT);
@@ -155,6 +156,10 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
 
     @Override
     public void simpleSkinBackport$setSlim(boolean slim) {
+//        if(!simpleSkinBackport$isPlayerModel()) {
+//            simpleSkinBackport$set64x();
+//            simpleSkinBackport$setPlayerModel(true);
+//        }
         if(simpleSkinBackport$isPlayerModel()) {
             if (ConfigMain.oldSlimArms) {
                 if (slim) {

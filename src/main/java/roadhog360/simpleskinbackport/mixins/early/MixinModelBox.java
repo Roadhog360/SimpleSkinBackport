@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import roadhog360.simpleskinbackport.ducks.ITransparentBox;
 
 @Mixin(ModelBox.class)
-public class MixinModelBox implements ITransparentBox, Cloneable {
+public class MixinModelBox implements ITransparentBox {
 
     @Unique
     private boolean simpleSkinBackport$isTransparent;
@@ -28,12 +28,16 @@ public class MixinModelBox implements ITransparentBox, Cloneable {
 
     @Inject(method = "render", at = @At(value = "HEAD"))
     private void doTransparency(Tessellator p_78245_1_, float p_78245_2_, CallbackInfo ci) {
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        if(simpleSkinBackport$isTransparent()) {
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        }
     }
 
     @Inject(method = "render", at = @At(value = "TAIL"))
     private void finishTransparency(Tessellator p_78245_1_, float p_78245_2_, CallbackInfo ci) {
-        GL11.glDisable(GL11.GL_BLEND);
+        if(simpleSkinBackport$isTransparent()) {
+            GL11.glDisable(GL11.GL_BLEND);
+        }
     }
 }
