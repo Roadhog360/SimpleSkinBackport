@@ -15,6 +15,7 @@ import net.minecraft.client.resources.SkinManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import roadhog360.simpleskinbackport.configuration.configs.ConfigModCompat;
+import roadhog360.simpleskinbackport.core.compat.SmartRenderCompat;
 import roadhog360.simpleskinbackport.ducks.IArmsState;
 import roadhog360.simpleskinbackport.ducks.IBoxSizeGetter;
 import roadhog360.simpleskinbackport.ducks.ITransparentBox;
@@ -157,6 +158,7 @@ public class Utils {
     public static int createDisplaylistFor(ModelRenderer renderer) {
         renderer.displayList = 0; //OptiFine for some reason checks if the display list is 0 and things get fucky if it isn't
         renderer.compileDisplayList(0.0625F);
+        SmartRenderCompat.doSmartRenderCompat(renderer);
         return renderer.displayList;
     }
 

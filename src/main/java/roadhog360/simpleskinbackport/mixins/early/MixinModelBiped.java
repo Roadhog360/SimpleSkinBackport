@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Unique;
 import roadhog360.simpleskinbackport.configuration.configs.ConfigMain;
 import roadhog360.simpleskinbackport.core.ArmPair;
 import roadhog360.simpleskinbackport.core.Utils;
+import roadhog360.simpleskinbackport.core.compat.SmartRenderCompat;
 import roadhog360.simpleskinbackport.ducks.INewBipedModel;
 
 @Mixin(ModelBiped.class)
@@ -131,6 +132,7 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
         bipedRightArm.displayList = arms.getRightDisplayList();
         bipedLeftArm.cubeList = arms.getLeft();
         bipedRightArm.cubeList = arms.getRight();
+        SmartRenderCompat.updateSmartRenderFields(bipedLeftArm, bipedRightArm);
         if(textureHeight == 64 && simpleSkinBackport$slimArmwear != null && simpleSkinBackport$wideArmwear != null) {
             ArmPair armwear = slim ? simpleSkinBackport$slimArmwear : simpleSkinBackport$wideArmwear;
             simpleSkinBackport$bipedLeftArmwear.displayList = armwear.getLeftDisplayList();

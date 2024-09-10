@@ -36,7 +36,7 @@ public class MixinRenderingRegistry {
                 modelBiped = renderBiped.modelBipedMain;
             }
             if (modelBiped instanceof INewBipedModel newBipedModel) {
-                if (Utils.rendererCopiesPlayerSkin(renderer) || entityClass.isAssignableFrom(EntityPlayer.class)) {
+                if (Utils.rendererCopiesPlayerSkin(renderer) || EntityPlayer.class.isAssignableFrom(entityClass)) {
                     newBipedModel.simpleSkinBackport$set64x();
                 }
             }

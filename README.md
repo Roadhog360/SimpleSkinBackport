@@ -19,6 +19,7 @@ Current Features:
 - Patch for Twilight Forest giants
 - Patch for Botania's Gaia Guardian
 - Works with OptiFine
+- Works with Smart Moving animations
 
 Todo:
 - 3D head rendering in inventory
@@ -31,4 +32,3 @@ Current incompatibility todo:
 - Iguana Tinker Tweaks heads are not 3D in inventory
 - Tinkers' Construct gold upgrade heads are not 3D in inventory
 - HEE's enderman head is not 3D in inventory
-- Smart Moving (it's like 90% working slim models are just slightly wrong)
