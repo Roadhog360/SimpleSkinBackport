@@ -23,6 +23,7 @@ Current Features:
 
 Todo:
 - 3D head rendering in inventory
+- Toggling individual hat layers for each limb
 - Config
   - Fix regular heads not working without a UUID when worn as a helmet
   - Toggle head block inventory icon render
