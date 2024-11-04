@@ -32,3 +32,4 @@ Current incompatibility todo:
 - Iguana Tinker Tweaks heads are not 3D in inventory
 - Tinkers' Construct gold upgrade heads are not 3D in inventory
 - HEE's enderman head is not 3D in inventory
+- Gaia Guardian head is not 3D in inventory
