@@ -1,4 +1,4 @@
-package roadhog360.simpleskinbackport;
+package roadhog360.simpleskinbackport.proxy;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;

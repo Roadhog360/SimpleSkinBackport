@@ -3,7 +3,7 @@ package roadhog360.simpleskinbackport.mixinplugin;
 import com.gtnewhorizon.gtnhmixins.ILateMixinLoader;
 import com.gtnewhorizon.gtnhmixins.LateMixin;
 import org.spongepowered.asm.mixin.MixinEnvironment;
-import roadhog360.simpleskinbackport.SimpleSkinBackport;
+import roadhog360.simpleskinbackport.Tags;
 import roadhog360.simpleskinbackport.configuration.configs.ConfigModCompat;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class SimpleSkinBackportLateMixins implements ILateMixinLoader {
 
     @Override
     public String getMixinConfig() {
-        return "mixins." + SimpleSkinBackport.MODID + ".late.json";
+        return "mixins." + Tags.MOD_ID + ".late.json";
     }
 
     @Override

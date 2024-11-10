@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import roadhog360.simpleskinbackport.SimpleSkinBackport;
+import roadhog360.simpleskinbackport.Tags;
 
 import java.util.List;
 import java.util.UUID;
@@ -40,7 +40,7 @@ public class MixinItemSkull extends Item {
 
     @Inject(method = "registerIcons", at = @At(value = "TAIL"))
     private void injectIconRegisterForHead(IIconRegister register, CallbackInfo ci) {
-        roadhogHeadIcon = register.registerIcon(SimpleSkinBackport.MODID + ":skull_roadhog360");
+        roadhogHeadIcon = register.registerIcon(Tags.MOD_ID + ":skull_roadhog360");
     }
 
     @Override

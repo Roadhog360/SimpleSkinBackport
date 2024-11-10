@@ -45,10 +45,12 @@ public class ItemSkullRenderer implements IItemRenderer {
     }
 
     private void renderSkull(float x, float y, float z, int meta, GameProfile name) {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(x, y, z);
-        TileEntitySkullRenderer.field_147536_b.func_152674_a(0, 0, 0, 0, 0, meta, name);
-        GL11.glPopMatrix();
+        if(TileEntitySkullRenderer.field_147536_b != null) {
+            GL11.glPushMatrix();
+            GL11.glTranslatef(x, y, z);
+            TileEntitySkullRenderer.field_147536_b.func_152674_a(0, 0, 0, 0, 0, meta, name);
+            GL11.glPopMatrix();
+        }
     }
 
     private GameProfile getGameProfile(ItemStack stack) {
@@ -62,6 +64,6 @@ public class ItemSkullRenderer implements IItemRenderer {
                 profile = new GameProfile(null, nbt.getString("SkullOwner"));
         }
 
-        return null;
+        return profile;
     }
 }

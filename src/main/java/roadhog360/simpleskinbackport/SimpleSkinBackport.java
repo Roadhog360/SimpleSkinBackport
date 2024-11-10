@@ -8,13 +8,16 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import roadhog360.simpleskinbackport.proxy.CommonProxy;
 
-@Mod(modid = SimpleSkinBackport.MODID, version = Tags.VERSION, name = "SimpleSkinBackport", acceptedMinecraftVersions = "[1.7.10]")
+@Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, acceptedMinecraftVersions = "[1.7.10]")
 public class SimpleSkinBackport {
-    public static final String MODID = "simpleskinbackport";
-    public static final Logger LOG = LogManager.getLogger(MODID);
+    public static final Logger LOG = LogManager.getLogger(Tags.MOD_ID);
 
-    @SidedProxy(clientSide = "roadhog360.simpleskinbackport.ClientProxy", serverSide = "roadhog360.simpleskinbackport.CommonProxy")
+    @Mod.Instance(Tags.MOD_ID)
+    public static SimpleSkinBackport instance;
+
+    @SidedProxy(clientSide = Tags.MOD_GROUP + ".proxy.ClientProxy", serverSide = Tags.MOD_GROUP + ".proxy.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.EventHandler

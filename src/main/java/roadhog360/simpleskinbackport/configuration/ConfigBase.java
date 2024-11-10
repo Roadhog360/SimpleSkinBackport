@@ -8,7 +8,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import org.apache.commons.lang3.ArrayUtils;
 import org.spongepowered.asm.mixin.MixinEnvironment;
-import roadhog360.simpleskinbackport.SimpleSkinBackport;
+import roadhog360.simpleskinbackport.Tags;
 import roadhog360.simpleskinbackport.configuration.configs.ConfigMain;
 import roadhog360.simpleskinbackport.configuration.configs.ConfigModCompat;
 import roadhog360.simpleskinbackport.core.DefaultPlayerSkin;
@@ -21,7 +21,7 @@ public abstract class ConfigBase extends Configuration {
     protected final List<ConfigCategory> configCats = new ArrayList<>();
     private static final Set<ConfigBase> CONFIGS = new HashSet<>();
 
-    public static final String configDir = "config" + File.separator + SimpleSkinBackport.MODID + File.separator;
+    public static final String configDir = "config" + File.separator + Tags.MOD_ID + File.separator;
 
     public static final ConfigBase MAIN = new ConfigMain(createConfigFile("main"));
     public static final ConfigBase MOD_COMPAT = new ConfigModCompat(createConfigFile("modcompat"));
@@ -79,7 +79,7 @@ public abstract class ConfigBase extends Configuration {
 
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-        if (SimpleSkinBackport.MODID.equals(eventArgs.modID))
+        if (Tags.MOD_ID.equals(eventArgs.modID))
             syncConfig();
     }
 

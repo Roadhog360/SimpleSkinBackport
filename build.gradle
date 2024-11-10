@@ -14,10 +14,13 @@ def NEXT_VERSION = ext.modVersion
 // If we have a clean tag (or manually specified), this is a production release.
 // No need for the commit hash!
 def details = versionDetails()
-def isPlainTag = details.getCommitDistance() == 0
-def noCommitHash = providers.gradleProperty("noCommitHash").isPresent()
+def isPlainTag = details.getCommitDistance() == 0 && details.getLastTag().isEmpty()
+boolean noCommitHash = providers.gradleProperty("noCommitHash").isPresent() || details.gitHash.isEmpty()
 if (!isPlainTag && !noCommitHash) {
-    NEXT_VERSION += "-nightly-" + details.gitHash
+    if(!NEXT_VERSION.isEmpty()) {
+        NEXT_VERSION += "-"
+    }
+    NEXT_VERSION += details.gitHash
 }
 
 // If we have uncommitted changes, say so.
@@ -33,4 +36,17 @@ minecraft {
     //Creates a tag in Tags with the above generated mod version, instead of the "clean" one
     injectedTags.put("RAW_VERSION", NEXT_VERSION)
     injectedTags.put("MOD_ID", project.modId)
+    injectedTags.put("MOD_NAME", project.modName)
+    injectedTags.put("MOD_GROUP", project.modGroup)
+
+    //Returns true if this build is in a dev env or has a commit hash (typically used by CI), false if otherwise
+    injectedTags.put("CI_BUILD", !noCommitHash)
+    //Returns true if this build is the above or has key words in its name that indicate it may not be a release build
+    injectedTags.put("SNAPSHOT_BUILD", !noCommitHash
+                || NEXT_VERSION.contains("snapshot")
+                || NEXT_VERSION.contains("nightly")
+                || NEXT_VERSION.contains("alpha")
+                || NEXT_VERSION.contains("beta")
+                || NEXT_VERSION.contains("rc")
+                || (NEXT_VERSION.contains("release") && NEXT_VERSION.contains("candidate")))
 }
