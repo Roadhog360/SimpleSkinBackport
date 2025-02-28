@@ -34,7 +34,7 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
     @Unique
     public ModelRenderer simpleSkinBackport$bipedRightLegwear;
     @Unique
-    public ModelRenderer simpleSkinBackport$bipedBodyWear;
+    public ModelRenderer simpleSkinBackport$bipedBodywear;
 
     @Unique
     private ArmPair simpleSkinBackport$wideArms;
@@ -74,42 +74,41 @@ public abstract class MixinModelBiped extends ModelBase implements INewBipedMode
             Utils.changeTextureOffset(bipedLeftArm, 32, 48);
             //Right arm is fine as it is and doesn't need any transformation.
 
-            simpleSkinBackport$bipedLeftArmwear = Utils.cloneModel(this, bipedLeftArm, 48, 48, true, Utils.BoxTransformType.HAT);
-            simpleSkinBackport$bipedRightArmwear = Utils.cloneModel(this, bipedRightArm, 40, 32, true, Utils.BoxTransformType.HAT);
+            simpleSkinBackport$bipedLeftArmwear = Utils.setAllBoxesTransparent(Utils.cloneModel(this, bipedLeftArm, 48, 48, true, Utils.BoxTransformType.HAT));
+            simpleSkinBackport$bipedRightArmwear = Utils.setAllBoxesTransparent(Utils.cloneModel(this, bipedRightArm, 40, 32, true, Utils.BoxTransformType.HAT));
 
             bipedLeftLeg.mirror = false;
             Utils.changeTextureOffset(bipedLeftLeg, 16, 48);
             //Right leg is fine as it is and doesn't need any transformation.
 
-            simpleSkinBackport$bipedLeftLegwear = Utils.cloneModel(this, bipedLeftLeg, 0, 48, true, Utils.BoxTransformType.HAT);
-            simpleSkinBackport$bipedRightLegwear = Utils.cloneModel(this, bipedRightLeg, 0, 32, true, Utils.BoxTransformType.HAT);
+            simpleSkinBackport$bipedLeftLegwear = Utils.setAllBoxesTransparent(Utils.cloneModel(this, bipedLeftLeg, 0, 48, true, Utils.BoxTransformType.HAT));
+            simpleSkinBackport$bipedRightLegwear = Utils.setAllBoxesTransparent(Utils.cloneModel(this, bipedRightLeg, 0, 32, true, Utils.BoxTransformType.HAT));
 
-            simpleSkinBackport$bipedBodyWear = Utils.cloneModel(this, bipedBody, 16, 32, true, Utils.BoxTransformType.HAT);
+            simpleSkinBackport$bipedBodywear = Utils.setAllBoxesTransparent(Utils.cloneModel(this, bipedBody, 16, 32, true, Utils.BoxTransformType.HAT));
         }
 
         simpleSkinBackport$armsRotationPointY = bipedRightArm.rotationPointY;
     }
 
     /**
-     * Creates the ModelBox instances used for slim arms.
+     * Creates the ModelBox instances used for slim arms, as well as armwear for slim and wide arms.
      */
     @Unique
     private void simpleSkinBackport$createArmBoxes() {
-        ModelRenderer tempLeftArmSlim = Utils.cloneModel(this, bipedLeftArm, false, Utils.BoxTransformType.SLIM_ARM);
-        ModelRenderer tempRightArmSlim = Utils.cloneModel(this, bipedRightArm, false, Utils.BoxTransformType.SLIM_RIGHT_ARM);
-
         simpleSkinBackport$wideArms = ArmPair.of(bipedLeftArm, bipedRightArm);
-        simpleSkinBackport$slimArms = ArmPair.of(tempLeftArmSlim, tempRightArmSlim);
+        simpleSkinBackport$slimArms = ArmPair.of(
+            Utils.cloneModel(this, bipedLeftArm, false, Utils.BoxTransformType.SLIM_LEFT_ARM),
+            Utils.cloneModel(this, bipedRightArm, false, Utils.BoxTransformType.SLIM_RIGHT_ARM)
+        );
 
         simpleSkinBackport$armsRotationPointY = bipedLeftArm.rotationPointY;
 
         if(textureHeight == 64) {
-            ModelRenderer tempLeftArmwearSlim = Utils.setAllBoxesTransparent(Utils.cloneModel(
-                this, bipedLeftArm, 48, 48, false, Utils.BoxTransformType.SLIM_ARM_HAT));
-            ModelRenderer tempRightArmwearSlim = Utils.setAllBoxesTransparent(Utils.cloneModel(
-                this, bipedRightArm, 40, 32, false, Utils.BoxTransformType.SLIM_RIGHT_ARM_HAT));
             simpleSkinBackport$wideArmwear = ArmPair.of(simpleSkinBackport$bipedLeftArmwear, simpleSkinBackport$bipedRightArmwear);
-            simpleSkinBackport$slimArmwear = ArmPair.of(tempLeftArmwearSlim, tempRightArmwearSlim);
+            simpleSkinBackport$slimArmwear = ArmPair.of(
+                Utils.cloneModel(this, simpleSkinBackport$bipedLeftArmwear, 48, 48, false, Utils.BoxTransformType.SLIM_LEFT_ARM),
+                Utils.cloneModel(this, simpleSkinBackport$bipedRightArmwear, 40, 32, false, Utils.BoxTransformType.SLIM_RIGHT_ARM)
+            );
         }
     }
 

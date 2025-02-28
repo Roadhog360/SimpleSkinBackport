@@ -187,9 +187,10 @@ public class Utils {
     public enum BoxTransformType {
          NONE(false, false, false),
          HAT(true, false, false),
-         SLIM_ARM(false, true, false),
+         SLIM_LEFT_ARM(false, true, false),
          SLIM_RIGHT_ARM(false, true, true),
-         SLIM_ARM_HAT(true, true, false),
+        //Currently unused, may be useful in the future?
+         SLIM_LEFT_ARM_HAT(true, true, false),
          SLIM_RIGHT_ARM_HAT(true, true, true);
 
         private final boolean hatLayer;

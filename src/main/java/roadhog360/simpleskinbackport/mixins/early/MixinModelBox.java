@@ -43,6 +43,7 @@ public class MixinModelBox implements ITransparentBox, IBoxSizeGetter {
     @Inject(method = "render", at = @At(value = "HEAD"))
     private void doTransparency(Tessellator p_78245_1_, float p_78245_2_, CallbackInfo ci) {
         if(simpleSkinBackport$isTransparent()) {
+            GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         }
@@ -51,7 +52,7 @@ public class MixinModelBox implements ITransparentBox, IBoxSizeGetter {
     @Inject(method = "render", at = @At(value = "TAIL"))
     private void finishTransparency(Tessellator p_78245_1_, float p_78245_2_, CallbackInfo ci) {
         if(simpleSkinBackport$isTransparent()) {
-            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glPopAttrib();
         }
     }
 }

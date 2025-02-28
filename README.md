@@ -22,15 +22,13 @@ Current Features:
 - Works with Smart Moving animations
 
 Todo:
-- 3D head rendering in inventory
+- 3D head rendering in inventory + mods todo:
+  - Twilight Forest
+  - Iquana Tinker Tweaks
+  - Tinkers' Construct gold upgrades
+  - HEE Enderman
+  - Gaia Guardian
 - Toggling individual hat layers for each limb
 - Config
   - Fix regular heads not working without a UUID when worn as a helmet
   - Toggle head block inventory icon render
-
-Current incompatibility todo:
-- Twilight Forest heads are not 3D in inventory
-- Iguana Tinker Tweaks heads are not 3D in inventory
-- Tinkers' Construct gold upgrade heads are not 3D in inventory
-- HEE's enderman head is not 3D in inventory
-- Gaia Guardian head is not 3D in inventory
