@@ -38,4 +38,5 @@ dependencies {
     compileOnly('com.github.GTNewHorizons:twilightforest:2.6.33:dev')
     compileOnly deobfCurse("headcrumbs-222838:2279949")
     compileOnly deobfCurse("botania-225643:2283837")
+    compileOnly deobfCurse('armourers-workshop-229523:3005075')
 }
