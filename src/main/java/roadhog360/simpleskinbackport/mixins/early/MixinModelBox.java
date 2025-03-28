@@ -16,33 +16,33 @@ import roadhog360.simpleskinbackport.ducks.ITransparentBox;
 public class MixinModelBox implements ITransparentBox, IBoxSizeGetter {
 
     @Unique
-    private boolean simpleSkinBackport$isTransparent;
+    private boolean ssb$isTransparent;
     @Unique
-    private float simpleSkinBackport$boxSize;
+    private float ssb$boxSize;
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))
     private void getBoxSize(ModelRenderer p_i1171_1_, int p_i1171_2_, int p_i1171_3_, float p_i1171_4_, float p_i1171_5_, float p_i1171_6_, int p_i1171_7_, int p_i1171_8_, int p_i1171_9_, float p_i1171_10_, CallbackInfo ci) {
-        simpleSkinBackport$boxSize = p_i1171_10_;
+        ssb$boxSize = p_i1171_10_;
     }
 
     @Override
-    public float simpleSkinBackport$getSize() {
-        return simpleSkinBackport$boxSize;
+    public float ssb$getSize() {
+        return ssb$boxSize;
     }
 
     @Override
-    public boolean simpleSkinBackport$isTransparent() {
-        return simpleSkinBackport$isTransparent;
+    public boolean ssb$isTransparent() {
+        return ssb$isTransparent;
     }
 
     @Override
-    public void simpleSkinBackport$setTransparent(boolean transparent) {
-        simpleSkinBackport$isTransparent = transparent;
+    public void ssb$setTransparent(boolean transparent) {
+        ssb$isTransparent = transparent;
     }
 
     @Inject(method = "render", at = @At(value = "HEAD"))
     private void doTransparency(Tessellator p_78245_1_, float p_78245_2_, CallbackInfo ci) {
-        if(simpleSkinBackport$isTransparent()) {
+        if(ssb$isTransparent()) {
             GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -51,7 +51,7 @@ public class MixinModelBox implements ITransparentBox, IBoxSizeGetter {
 
     @Inject(method = "render", at = @At(value = "TAIL"))
     private void finishTransparency(Tessellator p_78245_1_, float p_78245_2_, CallbackInfo ci) {
-        if(simpleSkinBackport$isTransparent()) {
+        if(ssb$isTransparent()) {
             GL11.glPopAttrib();
         }
     }

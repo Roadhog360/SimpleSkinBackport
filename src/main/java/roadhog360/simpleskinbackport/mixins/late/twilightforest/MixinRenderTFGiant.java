@@ -26,7 +26,7 @@ public abstract class MixinRenderTFGiant extends RenderBiped {
     private void overrideSkinAndSetResourceLocation(Entity par1Entity, CallbackInfoReturnable<ResourceLocation> cir) {
         PlayerSkin skin = ConfigModCompat.TFgiantSkinSet.getDefaultSkin(par1Entity.getPersistentID());
         if(this.modelBipedMain instanceof INewBipedModel model) {
-            model.simpleSkinBackport$setSlim(skin.isSlim());
+            model.ssb$setSlim(skin.isSlim());
             cir.setReturnValue(skin.getResource());
         }
     }

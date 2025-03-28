@@ -2,6 +2,7 @@ package roadhog360.simpleskinbackport.mixinplugin;
 
 import com.gtnewhorizon.gtnhmixins.ILateMixinLoader;
 import com.gtnewhorizon.gtnhmixins.LateMixin;
+import cpw.mods.fml.common.eventhandler.Event;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import roadhog360.simpleskinbackport.Tags;
 import roadhog360.simpleskinbackport.configuration.configs.ConfigModCompat;

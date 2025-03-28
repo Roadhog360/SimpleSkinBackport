@@ -9,15 +9,15 @@ import roadhog360.simpleskinbackport.ducks.IArmsState;
 public class MixinEntityPlayer implements IArmsState {
 
     @Unique
-    private boolean simpleSkinBackport$slim = false;
+    private boolean ssb$slim = false;
 
     @Override
-    public boolean simpleSkinBackport$isSlim() {
-        return simpleSkinBackport$slim;
+    public boolean ssb$isSlim() {
+        return ssb$slim;
     }
 
     @Override
-    public void simpleSkinBackport$setSlim(boolean slim) {
-        simpleSkinBackport$slim = slim;
+    public void ssb$setSlim(boolean slim) {
+        ssb$slim = slim;
     }
 }

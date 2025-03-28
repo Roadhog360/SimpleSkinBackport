@@ -17,10 +17,10 @@ public abstract class MixinModelSkull extends ModelBase {
     @Shadow
     public ModelRenderer skeletonHead;
     @Unique
-    public ModelRenderer simpleSkinBackport$bipedHeadwear;
+    public ModelRenderer ssb$bipedHeadwear;
 
     @Inject(method = "<init>(IIII)V", at = @At(value = "TAIL"))
     private void addHeadwear(int p_i1155_1_, int p_i1155_2_, int p_i1155_3_, int p_i1155_4_, CallbackInfo ci) {
-        simpleSkinBackport$bipedHeadwear = Utils.cloneModel(this, skeletonHead, 32, 0, true, Utils.BoxTransformType.HAT);
+        ssb$bipedHeadwear = Utils.cloneModel(this, skeletonHead, 32, 0, true, Utils.BoxTransformType.HAT);
     }
 }

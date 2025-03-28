@@ -51,7 +51,7 @@ public class Utils {
     }
 
     public static void setSlimFromMetadata(MinecraftProfileTexture texture, IArmsState data) {
-        data.simpleSkinBackport$setSlim(Objects.equals(texture.getMetadata("model"), "slim"));
+        data.ssb$setSlim(Objects.equals(texture.getMetadata("model"), "slim"));
     }
 
     public static boolean isPlayer(MinecraftProfileTexture.Type type, SkinManager.SkinAvailableCallback callback) {
@@ -70,7 +70,7 @@ public class Utils {
 
     public static ModelBox setBoxTransparent(ModelBox box) {
         if(box instanceof ITransparentBox) {
-            ((ITransparentBox) box).simpleSkinBackport$setTransparent(true);
+            ((ITransparentBox) box).ssb$setTransparent(true);
         }
         return box;
     }
@@ -116,7 +116,7 @@ public class Utils {
         int boxMaxZ = MathHelper.floor_float(box.posZ2 - box.posZ1);
         float size = 0;
         if(box instanceof IBoxSizeGetter boxWithSize) {
-            size = boxWithSize.simpleSkinBackport$getSize();
+            size = boxWithSize.ssb$getSize();
         }
         if(transform.isHatLayer()) {
             size += 0.25F;
@@ -129,7 +129,7 @@ public class Utils {
         }
         ModelBox newBox = makeBox(to, boxMinX, boxMinY, boxMinZ, boxMaxX, boxMaxY, boxMaxZ, size);
         if(newBox instanceof ITransparentBox newBoxTransparent && box instanceof ITransparentBox boxTransparent) {
-            newBoxTransparent.simpleSkinBackport$setTransparent(boxTransparent.simpleSkinBackport$isTransparent());
+            newBoxTransparent.ssb$setTransparent(boxTransparent.ssb$isTransparent());
         }
         return newBox;
     }
@@ -171,7 +171,7 @@ public class Utils {
 
     public static boolean isClientPlayerSlim() {
         if(FMLClientHandler.instance().getClientPlayerEntity() instanceof IArmsState player) {
-            return player.simpleSkinBackport$isSlim();
+            return player.ssb$isSlim();
         }
         return false;
     }

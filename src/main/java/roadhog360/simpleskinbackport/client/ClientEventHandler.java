@@ -3,6 +3,7 @@ package roadhog360.simpleskinbackport.client;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -24,16 +25,43 @@ public class ClientEventHandler {
         checkAndSetArmsState(FMLClientHandler.instance().getClientPlayerEntity(), RenderManager.instance.getEntityRenderObject(FMLClientHandler.instance().getClientPlayerEntity()));
     }
 
+    private static boolean hidingHeadwear;
+
     @SubscribeEvent
     public void onRenderEntity(RenderLivingEvent.Pre event) {
         checkAndSetArmsState(event.entity, event.renderer);
 
+        ModelRenderer headwear;
+        if(event.renderer instanceof RenderPlayer renderPlayer) {
+            headwear = renderPlayer.modelBipedMain.bipedHeadwear;
+        } else if (event.renderer instanceof RenderBiped renderBiped) {
+            headwear = renderBiped.modelBipedMain.bipedHeadwear;
+        } else {
+            return;
+        }
+
         ItemStack itemstack = event.entity.getEquipmentInSlot(4);
         boolean showHeadwear = itemstack == null || !isHead(itemstack.getItem());
+
+        if(headwear.showModel && !showHeadwear) {
+            hidingHeadwear = true;
+            headwear.showModel = false;
+        }
+    }
+
+    public void onPostRenderEntity(RenderLivingEvent.Post event) {
+        ModelRenderer headwear;
         if(event.renderer instanceof RenderPlayer renderPlayer) {
-            renderPlayer.modelBipedMain.bipedHeadwear.showModel = showHeadwear;
+            headwear = renderPlayer.modelBipedMain.bipedHeadwear;
         } else if (event.renderer instanceof RenderBiped renderBiped) {
-            renderBiped.modelBipedMain.bipedHeadwear.showModel = showHeadwear;
+            headwear = renderBiped.modelBipedMain.bipedHeadwear;
+        } else {
+            return;
+        }
+
+        if(hidingHeadwear) {
+            headwear.showModel = true;
+            hidingHeadwear = false;
         }
     }
 
@@ -46,9 +74,9 @@ public class ClientEventHandler {
         }
         if(modelBiped instanceof INewBipedModel model) {
             if(entity instanceof IArmsState player) {
-                model.simpleSkinBackport$setSlim(player.simpleSkinBackport$isSlim());
+                model.ssb$setSlim(player.ssb$isSlim());
             } else if(Utils.rendererCopiesPlayerSkin(render)) {
-                model.simpleSkinBackport$setSlim(Utils.isClientPlayerSlim());
+                model.ssb$setSlim(Utils.isClientPlayerSlim());
             }
         }
     }

@@ -37,7 +37,7 @@ public class MixinRenderingRegistry {
             }
             if (modelBiped instanceof INewBipedModel newBipedModel) {
                 if (Utils.rendererCopiesPlayerSkin(renderer) || EntityPlayer.class.isAssignableFrom(entityClass)) {
-                    newBipedModel.simpleSkinBackport$set64x();
+                    newBipedModel.ssb$set64x();
                 }
             }
         });

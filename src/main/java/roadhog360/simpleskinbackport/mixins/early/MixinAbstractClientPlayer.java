@@ -20,7 +20,7 @@ import roadhog360.simpleskinbackport.ducks.IArmsState;
 public abstract class MixinAbstractClientPlayer extends EntityPlayer implements SkinManager.SkinAvailableCallback, IArmsState {
 
     @Unique
-    private PlayerSkin simpleSkinBackport$defaultSkin;
+    private PlayerSkin ssb$defaultSkin;
 
     public MixinAbstractClientPlayer(World p_i45324_1_, GameProfile p_i45324_2_) {
         super(p_i45324_1_, p_i45324_2_);
@@ -28,14 +28,14 @@ public abstract class MixinAbstractClientPlayer extends EntityPlayer implements 
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))
     private void setDefaultSkinState(World p_i45074_1_, GameProfile p_i45074_2_, CallbackInfo ci) {
-        simpleSkinBackport$defaultSkin = ConfigMain.defaultSkinSet.getDefaultSkin(getPersistentID());
+        ssb$defaultSkin = ConfigMain.defaultSkinSet.getDefaultSkin(getPersistentID());
     }
 
     @Redirect(method = "getLocationSkin()Lnet/minecraft/util/ResourceLocation;",
         at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;locationStevePng:Lnet/minecraft/util/ResourceLocation;"))
     private ResourceLocation setNewDefaultSkin() {
-        simpleSkinBackport$setSlim(simpleSkinBackport$defaultSkin.isSlim());
-        return simpleSkinBackport$defaultSkin.getResource();
+        ssb$setSlim(ssb$defaultSkin.isSlim());
+        return ssb$defaultSkin.getResource();
     }
 
 //    UUID uuid = UUID.randomUUID();
@@ -50,9 +50,9 @@ public abstract class MixinAbstractClientPlayer extends EntityPlayer implements 
 //    private ResourceLocation setNewSkinModel(AbstractClientPlayer instance, Operation<ResourceLocation> original) {
 ////        boolean slim = Utils.isDefaultSkinSlim(uuid);
 ////        ResourceLocation skin = Utils.getDefaultSkin(uuid);
-////        simpleSkinBackport$setSlim(slim);
+////        ssb$setSlim(slim);
 ////        return skin;
-//        simpleSkinBackport$setSlim(ConfigMain.defaultSkinSet.isDefaultSkinSlim(getPersistentID()));
+//        ssb$setSlim(ConfigMain.defaultSkinSet.isDefaultSkinSlim(getPersistentID()));
 //        return ConfigMain.defaultSkinSet.getDefaultSkin(getPersistentID());
 //    }
 }
