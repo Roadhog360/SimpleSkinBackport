@@ -34,6 +34,10 @@ public class SimpleSkinBackportLateMixins implements ILateMixinLoader {
                 mixins.add("botania.MixinClientProxy");
                 mixins.add("botania.MixinRenderTileSkullOverride");
             }
+
+            if(loadedMods.contains("armourersWorkshop")){
+                mixins.add("aw.ClientProxyMixin");
+            }
         }
         return mixins;
     }
