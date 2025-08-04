@@ -158,7 +158,7 @@ public class Utils {
     public static int createDisplaylistFor(ModelRenderer renderer) {
         renderer.displayList = 0; //OptiFine for some reason checks if the display list is 0 and things get fucky if it isn't
         renderer.compileDisplayList(0.0625F);
-        SmartRenderCompat.doSmartRenderCompat(renderer);
+        SmartRenderCompat.updateSmartRenderFields(renderer);
         return renderer.displayList;
     }
 

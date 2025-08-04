@@ -20,6 +20,7 @@ Current Features:
 - Patch for Botania's Gaia Guardian
 - Works with OptiFine
 - Works with Smart Moving animations
+  - Untested with upstream Smart Moving, please use the builds made by makamys: [Smart Render](https://github.com/makamys/SmartRender) [Smart Moving](https://github.com/makamys/SmartMoving)
 
 Todo:
 - 3D head rendering in inventory + mods todo:
@@ -30,5 +31,5 @@ Todo:
   - Gaia Guardian
 - Toggling individual hat layers for each limb
 - Config
-  - Fix regular heads not working without a UUID when worn as a helmet
+  - Fix regular heads not working without a UUID when worn as a helmet or viewed in the inventory
   - Toggle head block inventory icon render
